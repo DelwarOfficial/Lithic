@@ -1,0 +1,68 @@
+[project]
+name = "lithic"
+version = "0.1.0"
+description = "Adapter-first unified coding agent combining graph indexing, compression, and concise response policy."
+readme = "README.md"
+authors = [
+    { name = "delwarnetwork", email = "delwarnetwork@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "anthropic>=0.112.0",
+    "click>=8.4.2",
+    "graphifyy>=0.8.49",
+    "httpx>=0.28.1",
+    "mcp>=1.28.1",
+    "openai>=2.44.0",
+    "python-dotenv>=1.2.1",
+    "pydantic>=2.13.4",
+    "pyyaml>=6.0.3",
+    "rich>=15.0.0",
+    "tree-sitter>=0.25.2,<0.26",
+]
+
+[project.optional-dependencies]
+headroom = ["headroom-ai[proxy,code,mcp,relevance]>=0.27.0"]
+
+[project.urls]
+Homepage = "https://github.com/DelwarOfficial/Lithic"
+Repository = "https://github.com/DelwarOfficial/Lithic"
+Issues = "https://github.com/DelwarOfficial/Lithic/issues"
+
+[project.scripts]
+lithic = "lithic.cli:main"
+lith = "lithic.cli:main"
+
+[dependency-groups]
+dev = [
+    "mypy>=2.1.0",
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+    "ruff>=0.15.20",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["B904"]
+
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+ignore_missing_imports = true
+
+[tool.uv]
+default-groups = ["dev"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[build-system]
+requires = ["uv_build>=0.11.19,<0.12.0"]
+build-backend = "uv_build"

@@ -1,0 +1,13 @@
+projects:
+  graphify:
+    local_path: D:\websie\merge-skill\graphify-8
+    license: MIT
+    integration: cli_adapter
+  headroom:
+    local_path: D:\websie\merge-skill\headroom-main
+    license: Apache-2.0
+    integration: optional_package_plus_fallback
+  caveman:
+    local_path: D:\websie\merge-skill\caveman-main
+    license: MIT
+    integration: policy_adaptation
