@@ -2,16 +2,15 @@
 
 ## 🍏 Mac Users
 
-### Installation
+### Installation (single command)
 
 ```bash
-# Install from source
-git clone https://github.com/DelwarOfficial/Lithic-CLI.git
-cd Lithic-CLI
-uv sync
-
-# pip install lithic-cli and brew install lithic-cli are planned
+uv tool install git+https://github.com/DelwarOfficial/Lithic-CLI.git
+# or
+pip install git+https://github.com/DelwarOfficial/Lithic-CLI.git
 ```
+
+See main README 📦 Installation for details. Dev: clone + uv sync.
 
 ### Keyboard Shortcuts
 
@@ -27,26 +26,21 @@ uv sync
 
 - **Python version**: Ensure Python 3.12+ is installed (`python3 --version`)
 - **Permission denied**: Use `sudo` with caution, or install with `--user` flag
-- **Virtual environment**: Recommended to avoid dependency conflicts
-
-```bash
-git clone https://github.com/DelwarOfficial/Lithic-CLI.git
-cd Lithic-CLI
-uv sync
-```
+- **Headroom (opt)**: May need Rust build tools. Falls back to built-in compressor.
 
 ---
 
 ## 🪟 Windows Users
 
-### Installation
+### Installation (single command)
 
 ```powershell
-# Install from source
-git clone https://github.com/DelwarOfficial/Lithic-CLI.git
-cd Lithic-CLI
-uv sync
+uv tool install git+https://github.com/DelwarOfficial/Lithic-CLI.git
+# or
+pip install git+https://github.com/DelwarOfficial/Lithic-CLI.git
 ```
+
+See main README for dev clone path.
 
 ### Keyboard Shortcuts
 
@@ -61,14 +55,8 @@ uv sync
 ### Common Issues & Fixes
 
 - **Python path**: Ensure Python is in your PATH environment variable
-- **Long paths**: Enable long path support in Windows (registry or group policy)
-- **Virtual environment**: Use PowerShell for best experience
-
-```powershell
-git clone https://github.com/DelwarOfficial/Lithic-CLI.git
-cd Lithic-CLI
-uv sync
-```
+- **Long paths**: Enable long path support in Windows
+- **Headroom (opt)**: Rust/MSVC may be needed for full build. Built-in fallback always available.
 
 ---
 
@@ -76,20 +64,20 @@ uv sync
 
 ### Pre-Installation Checklist
 
-- [ ] Python 3.12+ installed
-- [ ] `uv` is installed (`pip install uv` or `winget install astral.uv`)
-- [ ] Internet connection for first-time install
+- [ ] Python 3.12+
+- [ ] uv or pip
+- [ ] Internet for first install
 
 ### Troubleshooting
 
-1. **Command not found**: Check if Python scripts directory is in PATH
-2. **Permission errors**: Install with `--user` flag or use virtual environment
-3. **Graph generation fails**: Ensure working directory has read/write access
+1. **Command not found**: Add uv/pip user bin to PATH
+2. **Permission errors**: Use `--user` or uv tool
+3. **Graph fails**: Run from writable project dir. Use `lithic stats`
 
 ### Resources
 
-- [Official Documentation](docs/architecture.md)
+- [README](README.md)
+- [docs/setup.md](docs/setup.md)
 - [GitHub Issues](https://github.com/DelwarOfficial/Lithic-CLI/issues)
---
 
 **Need help?** Provide your OS version and the exact error message for faster support.

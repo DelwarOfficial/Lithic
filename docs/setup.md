@@ -26,6 +26,8 @@ uv sync --extra headroom
 
 If Headroom builds from source on Windows, install Visual Studio Build Tools with the C++ workload first.
 
+Graph build uses `.gitignore` + `.graphifyignore` (add `vendor/` etc to keep index small and focused).
+
 Environment variables:
 
 - `OPENAI_API_KEY`

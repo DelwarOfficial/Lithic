@@ -52,6 +52,8 @@ User (CLI or MCP)
 - Audit logs redact API keys, tokens, and secrets before writing.
 - MCP errors return sanitized messages; details logged separately.
 
+Graph indexing respects `.gitignore` and `.graphifyignore` (same syntax). Use to exclude large dirs like `vendor/`. See also `SKIP_DIRS` in graphify_adapter.
+
 ## Security boundaries
 
 | Boundary | Mechanism |

@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Initial project setup with Graphify adapter
-- Unified `/lithic` command with caveman-style output
-- CLI entry point with `lithic` and `lith` commands
+- Unified `/lithic` Grok skill with caveman-style output
+- CLI entry point `lithic` (single command)
 - Platform-specific guidelines for Mac and Windows users
 - Comprehensive README with badges and documentation
 - Contributing guidelines

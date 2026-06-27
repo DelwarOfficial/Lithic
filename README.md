@@ -21,7 +21,7 @@
   <a href="https://github.com/DelwarOfficial/Lithic-CLI"><img src="https://img.shields.io/github/stars/DelwarOfficial/Lithic-CLI?style=flat&color=yellow" alt="Stars"></a>
   <a href="https://github.com/DelwarOfficial/Lithic-CLI/commits/main"><img src="https://img.shields.io/github/last-commit/DelwarOfficial/Lithic-CLI?style=flat" alt="Last Commit"></a>
   <a href="LICENSE"><img src="https://img.shields.io/github/license/DelwarOfficial/Lithic-CLI?style=flat" alt="License"></a>
-  <a href="https://pypi.org/project/lithic-cli/"><img src="https://img.shields.io/badge/pypi-Coming%20Soon-blue" alt="PyPI"></a>
+  <a href="https://github.com/DelwarOfficial/Lithic-CLI#installation"><img src="https://img.shields.io/badge/install-uv%20tool%20%7C%20pip-blue" alt="Install"></a>
 </p>
 
 <p>
@@ -58,13 +58,17 @@ AI agents waste tokens reading your entire codebase. Lithic builds a live archit
 
 | Command | Purpose |
 |---------|---------|
-| `lithic index .` | Scan a repository into a queryable architecture graph |
-| `lithic ask "..."` | Question the graph about structure, dependencies, design |
-| `lithic explain "..."` | Explain any symbol, module, or file with graph context |
-| `lithic compress-file <file>` | Strip noise from tool output, logs, and diffs (up to 80% fewer tokens) |
-| `lithic review` | Concise diff review without the full context dump |
-| `lithic commit` | Generate Conventional Commit messages from staged changes |
-| `lithic upstream-status` | Check pinned Graphify, Headroom, and Caveman submodules |
+| `lithic index .` | Build or refresh project graph |
+| `lithic ask "..."` | Ask graph-guided architecture question |
+| `lithic explain "..."` | Explain symbol/module/file with graph context |
+| `lithic path "A" "B"` | Find relationship path in graph |
+| `lithic edit "..."` | Orient for edit task (read-only) |
+| `lithic review` | Concise review of current diff |
+| `lithic commit` | Conventional commit message from changes |
+| `lithic compress-file <file>` | Safe compression of large output/logs |
+| `lithic stats` | Show nodes, compression, graph info |
+| `lithic upstream-status` | Check pinned upstream submodules |
+| `lithic mcp serve` | Expose tools over MCP stdio |
 
 ---
 
