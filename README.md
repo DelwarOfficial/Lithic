@@ -294,6 +294,8 @@ uv run lithic mcp serve
 
 All commands are optimized for minimal token usage (~0.1-3K per call, compression reduces 60-90%).
 
+> **Tip:** `lith` is a shorthand alias for `lithic`. Both commands work identically — use whichever is quicker to type.
+
 | Command | Purpose |
 | --- | --- |
 | `lithic index .` | Build or refresh the project graph |
@@ -307,6 +309,37 @@ All commands are optimized for minimal token usage (~0.1-3K per call, compressio
 | `lithic stats` | Show graph and compression runtime stats |
 | `lithic upstream-status` | Check pinned upstream submodules against their remotes |
 | `lithic mcp serve` | Serve Lithic MCP tools over stdio |
+
+## MCP Integration
+
+Lithic exposes its core capabilities as an MCP (Model Context Protocol) server, allowing Claude Desktop, Cursor, and other MCP clients to access graph-indexing and compression tools directly.
+
+### Claude Desktop Setup
+
+Add the following to your Claude Desktop configuration file (`claude_desktop_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "lithic": {
+      "command": "uv",
+      "args": ["run", "lithic", "mcp", "serve"],
+      "cwd": "/path/to/your/project"
+    }
+  }
+}
+```
+
+### Available MCP Tools
+
+Once connected, Claude can use Lithic tools directly:
+
+- **`index_graph`** — Build or refresh a project graph
+- **`ask_graph`** — Query the graph for architecture insights
+- **`explain_symbol`** — Get context-rich explanations
+- **`compress_content`** — Reduce token usage for tool output
+
+This makes Lithic a powerful backend for AI agents working with large codebases.
 
 ## Configuration
 
