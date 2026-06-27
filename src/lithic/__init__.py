@@ -1,6 +1,6 @@
 """Lithic public package API."""
 
-from importlib.metadata import version, PackageNotFoundError
+from importlib.metadata import PackageNotFoundError, version
 
 from lithic.cli import main
 from lithic.config import AgentConfig

@@ -17,7 +17,18 @@ from lithic.tools.audit import subprocess as audit_subprocess
 
 _LOG = logging.getLogger(__name__)
 
-SKIP_DIRS = {".git", ".venv", "venv", "node_modules", "dist", "build", ".cache", "__pycache__", "vendor", "graphify-out"}
+SKIP_DIRS = {
+    ".git",
+    ".venv",
+    "venv",
+    "node_modules",
+    "dist",
+    "build",
+    ".cache",
+    "__pycache__",
+    "vendor",
+    "graphify-out",
+}
 GRAPH_OUTPUT_MARKER = ".lithic-graph-output"
 GRAPH_OUTPUT_DIR_NAMES = {"graphify-out", ".graphify-out"}
 
@@ -43,7 +54,7 @@ class GraphifyAdapter:
                     self._run(["graphify", "update", str(target), "--force"])
                 except RuntimeError:
                     if self.graph_exists():
-                        _log.warning("extract failed (no API key), reusing existing graph")
+                        _LOG.warning("extract failed (no API key), reusing existing graph")
                         return self.graph_path
                     raise RuntimeError(
                         "Graphify needs LLM API key. Set ANTHROPIC_API_KEY or OPENAI_API_KEY."

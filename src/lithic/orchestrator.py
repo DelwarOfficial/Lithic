@@ -15,7 +15,6 @@ from lithic.providers.service import LLMService
 from lithic.tools import git
 from lithic.tools.fs import resolve_path_within_root
 
-
 _log = logging.getLogger("lithic.orchestrator")
 
 
@@ -142,7 +141,8 @@ class Orchestrator:
             with path.open("r", encoding="utf-8", errors="replace") as fh:
                 head = fh.read(1_000_000)
                 return self.compression.compress_tool_output(
-                    head + f"\n... [file truncated: {size} bytes, showing first {len(head)} chars] ..."
+                    head
+                    + f"\n... [file truncated: {size} bytes, showing first {len(head)} chars] ..."
                 )
         content = path.read_text(encoding="utf-8", errors="replace")
         return self.compression.compress_tool_output(content)

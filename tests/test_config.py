@@ -11,7 +11,11 @@ def test_valid_mode_accepted() -> None:
 
 
 def test_valid_caveman_mode_accepted() -> None:
-    c = AgentConfig(project_root=Path.cwd(), graph_output_dir=Path.cwd(), response_mode="caveman_full")
+    c = AgentConfig(
+        project_root=Path.cwd(),
+        graph_output_dir=Path.cwd(),
+        response_mode="caveman_full",
+    )
     assert c.response_mode == "caveman_full"
 
 
