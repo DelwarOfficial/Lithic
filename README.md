@@ -1,6 +1,8 @@
 # Lithic-CLI
 
-Lithic CLI is a graph-first developer agent toolkit for understanding codebases, compressing context, and producing concise engineering output.
+Graph-first codebase intelligence for AI coding agents
+
+Cut context cost 80% · index any repo · ask architecture questions
 
 <p align="center">
   <a href="https://github.com/DelwarOfficial/Lithic-CLI"><img src="https://img.shields.io/github/stars/DelwarOfficial/Lithic-CLI?style=flat&color=yellow" alt="Stars"></a>
@@ -10,35 +12,22 @@ Lithic CLI is a graph-first developer agent toolkit for understanding codebases,
 </p>
 
 <p align="center">
-  <a href="#install">Install</a> •
+  <a href="#installation">Install</a> •
   <a href="#quick-start">Quick Start</a> •
-  <a href="#commands">Commands</a> •
+  <a href="#cli-commands">Commands</a> •
   <a href="#platform-guidelines">Platform Guidelines</a>
 </p>
 
-[GitHub Repository](https://github.com/DelwarOfficial/Lithic-CLI)
+AI agents waste tokens reading your entire codebase. Lithic builds a live architecture graph first, so agents understand structure, find relevant code, and answer questions without dumping everything into context.
 
-Lithic brings together three complementary ideas in a clean adapter-based architecture:
+**What it does:**
 
-- **Graphify-inspired graph intelligence** for codebase indexing, architecture mapping, and graph-guided exploration
-- **Headroom-inspired compression** for large tool output, logs, JSON, and file reads
-- **Caveman-inspired response policy** for concise review, commit, and coding-agent communication
-
-Rather than merging upstream projects into one tangled codebase, Lithic keeps each capability behind a dedicated layer. That makes the system easier to understand, safer to evolve, and better suited for real repository work.
-
-## Why Lithic
-
-Coding-agent workflows usually break down in three places:
-
-- they lose architectural context in large repositories
-- they spend too many tokens on noisy tool output
-- they answer too verbosely when short, actionable feedback is better
-
-Lithic is designed to improve all three:
-
-- **Graph-first orientation** before broad file scanning
-- **Deterministic compression** before model-facing calls
-- **Mode-aware response shaping** for review, commit, and concise workflows
+- **`lithic index .`** — scan a repository into a queryable architecture graph
+- **`lithic ask "..."`** — question the graph about structure, dependencies, design
+- **`lithic explain "..."`** — explain any symbol, module, or file with graph context
+- **`lithic compress-file <file>`** — strip noise from tool output, logs, and diffs (up to 80% fewer tokens)
+- **`lithic review`** — concise diff review without the full context dump
+- **`lithic commit`** — generate Conventional Commit messages from staged changes
 
 ## Platform Guidelines
 
