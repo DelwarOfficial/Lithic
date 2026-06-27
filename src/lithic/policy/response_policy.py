@@ -64,7 +64,8 @@ class ResponsePolicy:
         """Generate a conventional commit subject."""
         first = next(
             (
-                line for line in content.splitlines()
+                line
+                for line in content.splitlines()
                 if line.strip() and not self._DIFF_META_RE.match(line)
             ),
             "update code",
@@ -83,7 +84,8 @@ class ResponsePolicy:
     def format_review(self, content: str) -> str:
         """Generate actionable review findings."""
         lines = [
-            line.strip() for line in content.splitlines()
+            line.strip()
+            for line in content.splitlines()
             if line.strip() and not self._DIFF_META_RE.match(line)
         ]
         if not lines:
@@ -107,13 +109,17 @@ class ResponsePolicy:
                 text = re.sub(r"\b(the|a|an)\b\s*", "", text, flags=re.I)
             if ultra:
                 text = re.sub(
-                    r"\bbecause\b", "->",
+                    r"\bbecause\b",
+                    "->",
                     re.sub(
-                        r"\bconfiguration\b", "config",
+                        r"\bconfiguration\b",
+                        "config",
                         re.sub(
-                            r"\bimplementation\b", "impl",
+                            r"\bimplementation\b",
+                            "impl",
                             re.sub(
-                                r"\brequest\b", "req",
+                                r"\brequest\b",
+                                "req",
                                 re.sub(r"\bresponse\b", "res", text, flags=re.I),
                                 flags=re.I,
                             ),

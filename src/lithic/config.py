@@ -9,8 +9,14 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 _VALID_MODES = {
-    "normal", "concise", "caveman_lite", "caveman_full",
-    "caveman_ultra", "review", "commit", "safety_clear",
+    "normal",
+    "concise",
+    "caveman_lite",
+    "caveman_full",
+    "caveman_ultra",
+    "review",
+    "commit",
+    "safety_clear",
 }
 
 

@@ -25,16 +25,25 @@ console = Console(emoji=False)
 
 @click.group()
 @click.option("--verbose", is_flag=True, help="Enable verbose output.")
-@click.option("--provider", default=None,
-              help="LLM provider (anthropic, openai, ollama, openrouter)")
+@click.option(
+    "--provider", default=None, help="LLM provider (anthropic, openai, ollama, openrouter)"
+)
 @click.option("--model", default=None, help="Model name for the provider")
-@click.option("--mode", default=None,
-              help="Response mode (concise, normal, caveman_full, review, commit)")
-@click.option("--graph-dir", default=None, help="Graph output directory",
-              type=click.Path(path_type=Path))
+@click.option(
+    "--mode", default=None, help="Response mode (concise, normal, caveman_full, review, commit)"
+)
+@click.option(
+    "--graph-dir", default=None, help="Graph output directory", type=click.Path(path_type=Path)
+)
 @click.pass_context
-def main(ctx: click.Context, verbose: bool, provider: str | None,
-         model: str | None, mode: str | None, graph_dir: Path | None) -> None:
+def main(
+    ctx: click.Context,
+    verbose: bool,
+    provider: str | None,
+    model: str | None,
+    mode: str | None,
+    graph_dir: Path | None,
+) -> None:
     """Lithic - Carve Knowledge. Compress Context. Deliver Stone-Sharp Precision."""
     ctx.ensure_object(dict)
     config = AgentConfig.from_env(Path.cwd())
@@ -159,9 +168,6 @@ def stats(ctx: click.Context) -> None:
     console.print(table)
 
 
-
-
-
 @main.command("upstream-status")
 @click.option("--local-only", is_flag=True, help="Skip remote checks.")
 def upstream_status(local_only: bool) -> None:
@@ -182,6 +188,7 @@ def mcp(ctx: click.Context) -> None:
     """Manage the Lithic MCP server."""
     if ctx.invoked_subcommand is None:
         from lithic.mcp.server import serve as _serve
+
         _serve()
 
 
@@ -190,4 +197,5 @@ def mcp(ctx: click.Context) -> None:
 def serve(ctx: click.Context) -> None:
     """Start the MCP stdio server."""
     from lithic.mcp.server import serve as _serve
+
     _serve()

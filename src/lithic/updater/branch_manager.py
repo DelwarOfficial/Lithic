@@ -20,8 +20,7 @@ class BranchManager:
             raise ValueError(f"branch name length must be 1-{_MAX_BRANCH}")
         if not _BRANCH_RE.match(name):
             raise ValueError(
-                f"branch name contains invalid chars: {name!r} "
-                f"(allowed: a-z, A-Z, 0-9, _, /, ., -)"
+                f"branch name contains invalid chars: {name!r} (allowed: a-z, A-Z, 0-9, _, /, ., -)"
             )
         if name.startswith("-") or name.endswith(".") or ".." in name or ".lock" in name:
             raise ValueError(f"branch name has invalid pattern: {name!r}")

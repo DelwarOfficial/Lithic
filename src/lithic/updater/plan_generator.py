@@ -15,9 +15,11 @@ class PlanGenerator:
         plan = []
         for f in files:
             if isinstance(f, str):
-                plan.append({
-                    "step": f"review {f}",
-                    "action": f"Review changes in {f}",
-                })
+                plan.append(
+                    {
+                        "step": f"review {f}",
+                        "action": f"Review changes in {f}",
+                    }
+                )
         plan.append({"step": "test", "action": "Run tests to verify"})
         return plan

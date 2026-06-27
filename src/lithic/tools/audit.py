@@ -24,9 +24,7 @@ _SECRET_ASSIGNMENT_RE = re.compile(
     r"(?i)\b(api[_-]?key|token|secret|password|auth[_-]?token)\b"
     r"(\s*[:=]\s*['\"]?)([^\s'\",}]+)"
 )
-_AUTH_HEADER_RE = re.compile(
-    r"(?i)\bauthorization(\s*[:=]\s*)(?:bearer\s+)?[^\s'\",}]+"
-)
+_AUTH_HEADER_RE = re.compile(r"(?i)\bauthorization(\s*[:=]\s*)(?:bearer\s+)?[^\s'\",}]+")
 _BEARER_RE = re.compile(r"(?i)\bbearer\s+[A-Za-z0-9._~+\-/]+=*")
 _URL_CREDENTIALS_RE = re.compile(r"(://)([^:]+):([^@]+)@")
 
@@ -62,8 +60,7 @@ def _redact_obj(obj: object) -> object:
         return [_redact_obj(i) for i in obj]
     if isinstance(obj, dict):
         return {
-            k: "***" if _SECRET_KEY_RE.search(str(k)) else _redact_obj(v)
-            for k, v in obj.items()
+            k: "***" if _SECRET_KEY_RE.search(str(k)) else _redact_obj(v) for k, v in obj.items()
         }
     return obj
 

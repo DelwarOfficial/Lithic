@@ -3,7 +3,7 @@ from lithic.tools.audit import _redact, _redact_obj
 
 def test_redact_secrets() -> None:
     assert "***" in _redact("api_key=sk-1234567890")
-    assert "***" in _redact('Authorization: Bearer tok_xyz')
+    assert "***" in _redact("Authorization: Bearer tok_xyz")
 
 
 def test_redact_dict() -> None:

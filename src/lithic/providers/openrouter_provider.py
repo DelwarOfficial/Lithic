@@ -13,10 +13,7 @@ class OpenRouterProvider(BaseProvider):
 
     def __init__(self, model: str | None = None):
         self.model = (
-            model
-            or os.getenv("LITHIC_MODEL")
-            or os.getenv("UDA_MODEL")
-            or "openai/gpt-4.1-mini"
+            model or os.getenv("LITHIC_MODEL") or os.getenv("UDA_MODEL") or "openai/gpt-4.1-mini"
         )
 
     def complete(self, messages: list[dict[str, Any]], **kwargs: Any) -> str:

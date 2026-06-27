@@ -45,9 +45,7 @@ class UpstreamChecker:
             return []
         return [self._check_project(name, entry, remote=remote) for name, entry in projects.items()]
 
-    def _check_project(
-        self, name: str, entry: dict[str, Any], *, remote: bool
-    ) -> UpstreamStatus:
+    def _check_project(self, name: str, entry: dict[str, Any], *, remote: bool) -> UpstreamStatus:
         local_path = str(entry.get("local_path", ""))
         repo = str(entry.get("repo", ""))
         branch = str(entry.get("branch", "HEAD"))

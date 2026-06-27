@@ -139,9 +139,7 @@ def test_commit_command(monkeypatch) -> None:
 
 
 def test_path_command(monkeypatch) -> None:
-    monkeypatch.setattr(
-        lithic_cli.Orchestrator, "path_between", lambda self, s, t: "A -> B -> C"
-    )
+    monkeypatch.setattr(lithic_cli.Orchestrator, "path_between", lambda self, s, t: "A -> B -> C")
     result = CliRunner().invoke(main, ["path", "A", "B"])
     assert result.exit_code == 0
 
@@ -149,16 +147,12 @@ def test_path_command(monkeypatch) -> None:
 def test_compress_file_command(monkeypatch, tmp_path) -> None:
     f = tmp_path / "test.txt"
     f.write_text("hello world", encoding="utf-8")
-    monkeypatch.setattr(
-        lithic_cli.Orchestrator, "compress_file", lambda self, path: "compressed"
-    )
+    monkeypatch.setattr(lithic_cli.Orchestrator, "compress_file", lambda self, path: "compressed")
     result = CliRunner().invoke(main, ["compress-file", str(f)])
     assert result.exit_code == 0
 
 
 def test_edit_command(monkeypatch) -> None:
-    monkeypatch.setattr(
-        lithic_cli.Orchestrator, "orient_edit", lambda self, task: "edit context"
-    )
+    monkeypatch.setattr(lithic_cli.Orchestrator, "orient_edit", lambda self, task: "edit context")
     result = CliRunner().invoke(main, ["edit", "fix the parser"])
     assert result.exit_code == 0

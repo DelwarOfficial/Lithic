@@ -12,9 +12,7 @@ class AnthropicProvider(BaseProvider):
     """Anthropic messages API provider."""
 
     def __init__(self, model: str | None = None):
-        self.model = (
-            model or os.getenv("LITHIC_MODEL") or os.getenv("UDA_MODEL") or "gpt-4.1-mini"
-        )
+        self.model = model or os.getenv("LITHIC_MODEL") or os.getenv("UDA_MODEL") or "gpt-4.1-mini"
 
     def complete(self, messages: list[dict[str, Any]], **kwargs: Any) -> str:
         api_key = os.getenv("ANTHROPIC_API_KEY")
@@ -30,5 +28,3 @@ class AnthropicProvider(BaseProvider):
             **kwargs,
         )
         return "".join(getattr(block, "text", "") for block in response.content)
-
-

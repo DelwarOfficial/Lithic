@@ -31,12 +31,14 @@ class RiskScanner:
             for i, line in enumerate(text.splitlines(), 1):
                 for pattern in HIGH_RISK_PATTERNS:
                     if pattern.search(line):
-                        findings.append({
-                            "file": str(file_path.relative_to(self.project_root)),
-                            "line": str(i),
-                            "pattern": pattern.pattern,
-                            "content": line.strip(),
-                        })
+                        findings.append(
+                            {
+                                "file": str(file_path.relative_to(self.project_root)),
+                                "line": str(i),
+                                "pattern": pattern.pattern,
+                                "content": line.strip(),
+                            }
+                        )
         except PermissionError:
             _LOG.warning("permission denied reading %s", file_path)
         except UnicodeDecodeError:

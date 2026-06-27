@@ -53,7 +53,9 @@ def _create_link_outside_root(tmp_path: Path, target: Path) -> Path:
         # Works without admin on all Windows versions
         subprocess.run(
             ["cmd", "/c", "mklink", "/J", str(link), str(target)],
-            check=True, capture_output=True, text=True,
+            check=True,
+            capture_output=True,
+            text=True,
         )
     else:
         link = tmp_path / "_linked"

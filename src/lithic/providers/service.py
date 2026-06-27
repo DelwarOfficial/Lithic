@@ -21,21 +21,25 @@ def _init_provider_map() -> None:
         return
     try:
         from lithic.providers.anthropic_provider import AnthropicProvider
+
         _PROVIDER_MAP["anthropic"] = AnthropicProvider
     except ImportError:
         pass
     try:
         from lithic.providers.openai_provider import OpenAIProvider
+
         _PROVIDER_MAP["openai"] = OpenAIProvider
     except ImportError:
         pass
     try:
         from lithic.providers.ollama_provider import OllamaProvider
+
         _PROVIDER_MAP["ollama"] = OllamaProvider
     except ImportError:
         pass
     try:
         from lithic.providers.openrouter_provider import OpenRouterProvider
+
         _PROVIDER_MAP["openrouter"] = OpenRouterProvider
     except ImportError:
         pass
@@ -65,8 +69,7 @@ class LLMService:
         p = self.get_provider()
         if p is None:
             raise RuntimeError(
-                f"no provider for '{self.config.provider}' "
-                f"(valid: {list(_PROVIDER_MAP) or 'none'})"
+                f"no provider for '{self.config.provider}' (valid: {list(_PROVIDER_MAP) or 'none'})"
             )
         return cast(str, p.complete(messages, **kwargs))
 

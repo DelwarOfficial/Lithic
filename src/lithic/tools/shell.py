@@ -14,6 +14,7 @@ from lithic.tools.audit import subprocess as audit_subprocess
 class CommandError(RuntimeError):
     """Raised when a shell command fails, times out, or is destructive."""
 
+
 _DANGEROUS_PYTHON_KEYWORDS = {"shutil", "rmtree", "os.remove", "os.unlink", "send2trash"}
 _CONFIRM_ENV = "LITHIC_ALLOW_DESTRUCTIVE"
 

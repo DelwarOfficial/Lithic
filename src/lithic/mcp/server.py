@@ -16,6 +16,7 @@ from lithic.tools.audit import input_rejected, tool_call
 
 _log = logging.getLogger("lithic.mcp")
 
+
 def _env_int(key: str, default: int) -> int:
     val = os.getenv(key)
     if val is None:

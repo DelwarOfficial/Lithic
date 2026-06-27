@@ -220,9 +220,7 @@ class GraphifyAdapter:
             elapsed = time.monotonic() - start
             audit_subprocess(command, -1, elapsed, f"timed out after {timeout}s")
             rendered = shlex.join(command)
-            raise RuntimeError(
-                f"Graphify command timed out after {timeout}s ({rendered})"
-            ) from exc
+            raise RuntimeError(f"Graphify command timed out after {timeout}s ({rendered})") from exc
         elapsed = time.monotonic() - start
         output = (result.stdout or "").strip()
         error = (result.stderr or "").strip()
