@@ -1,6 +1,6 @@
-# Lithic
+# Lithic-CLI
 
-Lithic is a graph-first developer agent toolkit for understanding codebases, compressing context, and producing concise engineering output.
+Lithic CLI is a graph-first developer agent toolkit for understanding codebases, compressing context, and producing concise engineering output.
 
 <p align="center">
   <a href="https://github.com/DelwarOfficial/Lithic-CLI"><img src="https://img.shields.io/github/stars/DelwarOfficial/Lithic-CLI?style=flat&color=yellow" alt="Stars"></a>
