@@ -90,8 +90,6 @@ pip install lithic-cli
 
 - [Official Documentation](docs/architecture.md)
 - [GitHub Issues](https://github.com/DelwarOfficial/Lithic-CLI/issues)
-- [Discord Community](https://discord.gg/lithic)
-
----
+--
 
 **Need help?** Provide your OS version and the exact error message for faster support.

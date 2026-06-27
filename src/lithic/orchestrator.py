@@ -8,72 +8,32 @@ from typing import Any
 
 from lithic.compression.headroom_adapter import HeadroomAdapter
 from lithic.config import AgentConfig
-from lithic.graph.graphify_adapter import GraphifyAdapter
+from lithic.graph.service import GraphService
 from lithic.policy.response_policy import ResponsePolicy
+from lithic.providers.service import LLMService
 from lithic.tools import git
 from lithic.tools.fs import resolve_path_within_root
 
-_PROVIDER_MAP: dict[str, type[Any]] = {}
-
-
-def _init_provider_map() -> None:
-    if _PROVIDER_MAP:
-        return
-    try:
-        from lithic.providers.anthropic_provider import AnthropicProvider
-        _PROVIDER_MAP["anthropic"] = AnthropicProvider
-    except ImportError:
-        pass
-    try:
-        from lithic.providers.openai_provider import OpenAIProvider
-        _PROVIDER_MAP["openai"] = OpenAIProvider
-    except ImportError:
-        pass
-    try:
-        from lithic.providers.ollama_provider import OllamaProvider
-        _PROVIDER_MAP["ollama"] = OllamaProvider
-    except ImportError:
-        pass
-    try:
-        from lithic.providers.openrouter_provider import OpenRouterProvider
-        _PROVIDER_MAP["openrouter"] = OpenRouterProvider
-    except ImportError:
-        pass
-
 
 class Orchestrator:
-    """Coordinate graph, compression, and policy layers."""
+    """Coordinate graph, LLM, compression, and policy layers."""
 
     def __init__(self, config: AgentConfig | None = None):
         self.config = config or AgentConfig.from_env()
-        self.graph = GraphifyAdapter(self.config.project_root, self.config.graph_output_dir)
+        self.graph = GraphService(self.config.project_root, self.config.graph_output_dir)
+        self._llm = LLMService(self.config)
         self.compression = HeadroomAdapter()
         self.policy = ResponsePolicy()
         self.events: list[str] = []
-        self._provider: Any = None
 
     def provider(self) -> Any:
-        if self._provider is not None:
-            return self._provider
-        _init_provider_map()
-        ptype = _PROVIDER_MAP.get(self.config.provider)
-        if ptype is None:
-            return None
-        self._provider = ptype(model=self.config.model)
-        return self._provider
+        return self._llm.get_provider()
 
     def complete(self, messages: list[dict[str, Any]], **kwargs: Any) -> str:
-        p = self.provider()
-        if p is None:
-            raise RuntimeError(
-                f"no provider for '{self.config.provider}' "
-                f"(valid: {list(_PROVIDER_MAP) or 'none'})"
-            )
         self.events.append(f"provider.{self.config.provider}")
-        return p.complete(messages, **kwargs)
+        return self._llm.complete(messages, **kwargs)
 
     def classify(self, task: str) -> str:
-        """Classify a user task into a workflow type."""
         t = task.lower().strip()
         if t.startswith("review"):
             return "review"
@@ -91,18 +51,37 @@ class Orchestrator:
             return "edit"
         return "ask"
 
+    def _llm_answer(self, context: str, task: str) -> str:
+        p = self.provider()
+        if p is None:
+            return context
+        messages = [
+            {
+                "role": "system",
+                "content": "You are a codebase expert. Answer concisely from context.",
+            },
+            {"role": "user", "content": f"Context:\n{context}\n\nQuestion: {task}"},
+        ]
+        try:
+            return p.complete(messages)
+        except RuntimeError:
+            return context
+
     def ask(self, question: str) -> str:
-        """Answer a codebase question through the graph."""
         self.events.append("graph.query")
-        return self.policy.shape(self.graph.query(question), self.config.response_mode)
+        raw = self.graph.query(question)
+        if self.provider() is not None:
+            raw = self._llm_answer(raw, question)
+        return self.policy.shape(raw, self.config.response_mode)
 
     def explain(self, concept: str) -> str:
-        """Explain a graph concept."""
         self.events.append("graph.explain")
-        return self.policy.shape(self.graph.explain(concept), self.config.response_mode)
+        raw = self.graph.explain(concept)
+        if self.provider() is not None:
+            raw = self._llm_answer(raw, f"Explain: {concept}")
+        return self.policy.shape(raw, self.config.response_mode)
 
     def path_between(self, source: str, target: str) -> str:
-        """Return a path between two concepts."""
         self.events.append("graph.path")
         return self.policy.shape(
             self.graph.path_between(source, target),
@@ -110,7 +89,6 @@ class Orchestrator:
         )
 
     def review(self) -> str:
-        """Review current working-tree changes."""
         try:
             diff = git.diff(self.config.project_root)
         except RuntimeError as exc:
@@ -121,7 +99,6 @@ class Orchestrator:
         return self.policy.shape(compressed, mode="review")
 
     def commit(self) -> str:
-        """Generate a Conventional Commit message."""
         diff = ""
         try:
             diff = git.diff(self.config.project_root, staged=True)
@@ -138,26 +115,22 @@ class Orchestrator:
         return self.policy.shape(compressed, mode="commit")
 
     def orient_edit(self, task: str) -> str:
-        """Use the graph to orient an edit task without making changes."""
         context = self.ask(f"Locate files and architecture context for edit task: {task}")
         self.events.append("edit.orient")
         return context
 
     def index(self, path: str = ".") -> str:
-        """Build or refresh the project graph."""
         graph_path = self.graph.build_graph(path)
         self.events.append("graph.build")
         return f"Graph built at {graph_path}"
 
     def run_tests(self) -> str:
-        """Record a requested test step."""
         self.events.append("test.requested")
         return "Tests should be run after edits."
 
     _MAX_COMPRESS_BYTES = 100_000_000
 
     def compress_file(self, file_path: str) -> str:
-        """Compress a file safely within the project root."""
         path = resolve_path_within_root(self.config.project_root, Path(file_path))
         size = path.stat().st_size
         if size > self._MAX_COMPRESS_BYTES:
@@ -172,7 +145,6 @@ class Orchestrator:
         return self.compression.compress_tool_output(content)
 
     def handle(self, task: str) -> str:
-        """Handle a generic user task."""
         kind = self.classify(task)
         if kind == "index":
             return self.index(".")
@@ -188,7 +160,6 @@ class Orchestrator:
         return self.ask(task)
 
     def stats(self) -> dict[str, object]:
-        """Return runtime stats."""
         return {
             "graph_exists": self.graph.graph_exists(),
             "graph": self.graph.stats(),

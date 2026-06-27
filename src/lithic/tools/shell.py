@@ -9,13 +9,19 @@ from pathlib import Path
 
 from lithic.tools.audit import subprocess as audit_subprocess
 
+
+class CommandError(RuntimeError):
+    """Raised when a shell command fails, times out, or is destructive."""
+
 _DESTRUCTIVE_RULES: set[tuple[str, str]] = {
     ("rm", "-rf"),
     ("rm", "-r"),
     ("rm", "-fr"),
     ("rmdir", "/s"),
+    ("rd", "/s"),
     ("del", "/s"),
     ("del", "/f"),
+    ("deltree", ""),
     ("git", "reset"),
     ("git", "clean"),
     ("drop", "table"),
@@ -29,7 +35,7 @@ _DESTRUCTIVE_RULES: set[tuple[str, str]] = {
 def _is_destructive(command: list[str]) -> bool:
     if not command:
         return False
-    cmd0 = os.path.basename(command[0]).lower()
+    cmd0 = os.path.splitext(os.path.basename(command[0]).lower())[0]
     args_lower = [a.lower() for a in command[1:]]
     for base, flag in _DESTRUCTIVE_RULES:
         if cmd0 == base:
@@ -43,7 +49,8 @@ def _is_destructive(command: list[str]) -> bool:
 def run(command: list[str], cwd: Path, timeout: int = 60) -> str:
     """Run a shell command safely using subprocess list form."""
     if _is_destructive(command):
-        raise ValueError(f"refusing destructive command without confirmation: {' '.join(command)}")
+        rendered = " ".join(command)
+        raise CommandError(f"refusing destructive command: {rendered}")
     start = time.monotonic()
     try:
         result = subprocess.run(
@@ -52,12 +59,12 @@ def run(command: list[str], cwd: Path, timeout: int = 60) -> str:
     except subprocess.TimeoutExpired as exc:
         elapsed = time.monotonic() - start
         audit_subprocess(command, -1, elapsed, f"timed out after {timeout}s")
-        raise RuntimeError(f"command timed out after {timeout}s: {' '.join(command)}") from exc
+        raise CommandError(f"command timed out after {timeout}s: {' '.join(command)}") from exc
     elapsed = time.monotonic() - start
     output = ((result.stdout or "") + (result.stderr or "")).strip()
     if result.returncode != 0:
         audit_subprocess(command, result.returncode, elapsed, output[:500])
         msg = (output[:2000] + "...") if len(output) > 2000 else (output or "command failed")
-        raise RuntimeError(msg)
+        raise CommandError(msg)
     audit_subprocess(command, result.returncode, elapsed)
     return output

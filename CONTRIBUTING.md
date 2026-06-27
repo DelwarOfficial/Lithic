@@ -45,7 +45,7 @@ By participating in this project, you agree to abide by our Code of Conduct. Ple
 ```bash
 # Clone the repository
 git clone https://github.com/DelwarOfficial/Lithic-CLI.git
-cd Lithic
+cd Lithic-CLI
 
 # Create a virtual environment
 python -m venv venv

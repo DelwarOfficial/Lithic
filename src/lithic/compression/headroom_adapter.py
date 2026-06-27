@@ -35,8 +35,10 @@ class CompressionStats:
 
 
 class HeadroomAdapter:
-    def __init__(self) -> None:
+    def __init__(self, cache_size: int = 64) -> None:
         self._stats = CompressionStats()
+        self._cache: dict[int, str] = {}
+        self._cache_size = cache_size
         try:
             from headroom import compress as headroom_compress
 
@@ -48,8 +50,24 @@ class HeadroomAdapter:
             _LOG.warning("headroom import failed: %s", exc)
             self._headroom_compress = None
 
+    def _cache_key(self, text: str, max_chars: int = 8000) -> int:
+        return hash((text, max_chars))
+
+    def _cache_get(self, key: int) -> str | None:
+        return self._cache.get(key)
+
+    def _cache_put(self, key: int, value: str) -> None:
+        if len(self._cache) >= self._cache_size:
+            self._cache.pop(next(iter(self._cache)))
+        self._cache[key] = value
+
     def compress_text(self, text: str, label: str | None = None) -> str:
+        key = self._cache_key(text)
+        cached = self._cache_get(key)
+        if cached is not None:
+            return cached
         compressed = self._compress_with_headroom(text, label) or self._fallback_compress(text)
+        self._cache_put(key, compressed)
         return self._record(text, compressed)
 
     def compress_messages(self, messages: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -78,10 +96,16 @@ class HeadroomAdapter:
     def compress_tool_output(self, output: str, max_chars: int = 8000) -> str:
         if len(output) <= max_chars:
             return self._record(output, output)
+        key = self._cache_key(output, max_chars)
+        cached = self._cache_get(key)
+        if cached is not None:
+            return cached
         headroom_result = self._compress_with_headroom(output, "tool_output")
         if headroom_result is not None and len(headroom_result) <= max_chars:
+            self._cache_put(key, headroom_result)
             return self._record(output, headroom_result)
         compressed = self._fallback_compress(output, max_chars=max_chars)
+        self._cache_put(key, compressed)
         return self._record(output, compressed)
 
     def retrieve(self, ref: str) -> str:

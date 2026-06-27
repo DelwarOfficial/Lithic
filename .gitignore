@@ -14,11 +14,11 @@ wheels/
 # --- Virtual environment ---
 .venv/
 venv/
+.env
 .env/
 
 # --- Local toolchain ---
 graphify-out/
-uv.lock
 .uv/
 
 # --- IDE / Editor ---

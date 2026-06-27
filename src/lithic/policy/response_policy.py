@@ -61,7 +61,7 @@ class ResponsePolicy:
             (line for line in content.splitlines() if line.strip()),
             "update code",
         )
-        first = first.lstrip("- *").strip()
+        first = re.sub(r"^[- *]+", "", first).strip()
         match = self._COMMIT_TYPE_RE.match(first)
         if match:
             prefix = match.group(1)
