@@ -23,7 +23,7 @@ projects:
     repo: https://github.com/JuliusBrussee/caveman
     branch: main
     commit: 25d22f864ad68cc447a4cb93aefde918aa4aec9f
-    version: 0.1.0
+    version: 1.9.0
     local_path: vendor/caveman
     license: MIT
     integration: policy_adaptation

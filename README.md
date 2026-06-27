@@ -209,7 +209,7 @@ These layers are coordinated by `lithic.orchestrator`, which is intentionally **
 
 - [GitHub Repository](https://github.com/DelwarOfficial/Lithic-CLI)
 - [Issues](https://github.com/DelwarOfficial/Lithic-CLI/issues)
-- [Official Documentation](https://github.com/DelwarOfficial/Lithic-CLI/wiki)
+- [Docs](docs/architecture.md)
 
 ## License
 
@@ -233,7 +233,7 @@ More architecture details are available in [`docs/architecture.md`](docs/archite
 
 ```powershell
 git clone https://github.com/DelwarOfficial/Lithic-CLI.git
-cd Lithic
+cd Lithic-CLI
 uv sync
 ```
 

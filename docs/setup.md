@@ -4,7 +4,7 @@ Windows PowerShell:
 
 ```powershell
 git clone https://github.com/DelwarOfficial/Lithic-CLI.git
-cd Lithic
+cd Lithic-CLI
 uv sync
 uv run lithic --help
 ```
