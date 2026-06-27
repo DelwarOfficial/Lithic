@@ -9,7 +9,6 @@ import click
 from rich.console import Console
 
 from lithic.config import AgentConfig
-from lithic.mcp.server import serve
 from lithic.orchestrator import Orchestrator
 from lithic.updater import UpstreamChecker
 
@@ -18,19 +17,38 @@ console = Console()
 
 @click.group()
 @click.option("--verbose", is_flag=True, help="Enable verbose output.")
+@click.option("--provider", default=None,
+              help="LLM provider (anthropic, openai, ollama, openrouter)")
+@click.option("--model", default=None, help="Model name for the provider")
+@click.option("--mode", default=None,
+              help="Response mode (concise, normal, caveman_full, review, commit)")
+@click.option("--graph-dir", default=None, help="Graph output directory",
+              type=click.Path(path_type=Path))
 @click.pass_context
-def main(ctx: click.Context, verbose: bool) -> None:
+def main(ctx: click.Context, verbose: bool, provider: str | None,
+         model: str | None, mode: str | None, graph_dir: Path | None) -> None:
     """Lithic - Carve Knowledge. Compress Context. Deliver Stone-Sharp Precision."""
     ctx.ensure_object(dict)
     config = AgentConfig.from_env(Path.cwd())
+    overrides: dict[str, object] = {}
     if verbose:
+        overrides["verbose"] = True
+    if provider is not None:
+        overrides["provider"] = provider
+    if model is not None:
+        overrides["model"] = model
+    if mode is not None:
+        overrides["response_mode"] = mode
+    if graph_dir is not None:
+        overrides["graph_output_dir"] = graph_dir.resolve()
+    if overrides:
         config = AgentConfig(
             project_root=config.project_root,
-            graph_output_dir=config.graph_output_dir,
-            provider=config.provider,
-            model=config.model,
-            response_mode=config.response_mode,
-            verbose=True,
+            graph_output_dir=overrides.get("graph_output_dir", config.graph_output_dir),  # type: ignore[arg-type]
+            provider=str(overrides.get("provider", config.provider)),
+            model=str(overrides.get("model", config.model)),
+            response_mode=str(overrides.get("response_mode", config.response_mode)),
+            verbose=bool(overrides.get("verbose", config.verbose)),
         )
     ctx.obj["orchestrator"] = Orchestrator(config)
 
@@ -132,7 +150,18 @@ def upstream_status(local_only: bool) -> None:
         console.print(line)
 
 
-@main.command()
-def mcp() -> None:
-    """Start the MCP server over stdio."""
-    serve()
+@main.group()
+@click.pass_context
+def mcp(ctx: click.Context) -> None:
+    """Manage the Lithic MCP server."""
+    if ctx.invoked_subcommand is None:
+        from lithic.mcp.server import serve as _serve
+        _serve()
+
+
+@mcp.command()
+@click.pass_context
+def serve(ctx: click.Context) -> None:
+    """Start the MCP stdio server."""
+    from lithic.mcp.server import serve as _serve
+    _serve()

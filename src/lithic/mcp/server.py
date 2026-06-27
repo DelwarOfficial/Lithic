@@ -23,6 +23,8 @@ _COMPRESS_SIZE_LIMIT = int(os.getenv("LITHIC_MCP_COMPRESS_SIZE_LIMIT", "500_000"
 
 
 class _RateLimiter:
+    """Sliding-window rate limiter per-process — adequate for stdio only."""
+
     def __init__(self, max_calls: int = _MAX_CALLS_PER_WINDOW, window: float = _WINDOW_SEC):
         self.max_calls = max_calls
         self.window = window
@@ -165,8 +167,10 @@ def build_server() -> Any:
             tool_call(name, args, False, time.monotonic() - start, "unknown tool")
             return _tool_result(f"unknown tool: {name}")
         except Exception as exc:
+            import logging
+            logging.getLogger("lithic.mcp").warning("tool call failed: %s", exc)
             tool_call(name, args, False, time.monotonic() - start, str(exc))
-            return _tool_result(f"error: {exc}")
+            return _tool_result("error: internal error")
 
     return server
 

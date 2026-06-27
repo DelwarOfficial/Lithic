@@ -128,25 +128,33 @@ class GraphifyAdapter:
             raise ValueError(
                 f"graph output dir must stay inside project root: {self.graph_output_dir}"
             ) from exc
+        if self.graph_output_dir == self.project_root:
+            raise ValueError(f"graph output dir cannot be project root: {self.graph_output_dir}")
         if self.graph_output_dir.exists():
             self._rmtree_safe(self.graph_output_dir)
         self.graph_output_dir.mkdir(parents=True, exist_ok=True)
 
     @staticmethod
     def _rmtree_safe(path: Path) -> None:
-        """Remove a directory tree, refusing to follow symlinks."""
-        for entry in path.rglob("*"):
+        """Remove a directory tree bottom-up, checking symlinks at deletion time."""
+        for entry in sorted(path.rglob("*"), key=lambda p: len(p.parts), reverse=True):
             if entry.is_symlink():
-                raise RuntimeError(f"refusing to follow symlink during rmtree: {entry}")
-        for entry in path.rglob("*"):
+                raise RuntimeError(f"refusing to remove symlink: {entry}")
             try:
                 entry.chmod(entry.stat().st_mode | stat.S_IWRITE)
             except PermissionError as exc:
                 _LOG.warning("cannot chmod %s: %s", entry, exc)
-        def _on_rm_error(*a: object) -> None:
-            _LOG.warning("rmtree error: %s", a[1] if len(a) > 1 else a)
-
-        shutil.rmtree(path, onexc=_on_rm_error)
+            try:
+                if entry.is_dir():
+                    entry.rmdir()
+                else:
+                    entry.unlink()
+            except (OSError, PermissionError) as exc:
+                raise RuntimeError(f"cannot remove {entry}: {exc}") from exc
+        try:
+            path.rmdir()
+        except OSError as exc:
+            raise RuntimeError(f"cannot remove root {path}: {exc}") from exc
 
     def _graph_arg(self) -> str:
         try:

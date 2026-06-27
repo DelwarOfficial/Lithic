@@ -47,15 +47,8 @@ By participating in this project, you agree to abide by our Code of Conduct. Ple
 git clone https://github.com/DelwarOfficial/Lithic-CLI.git
 cd Lithic-CLI
 
-# Create a virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: .\venv\Scripts\Activate
-
-# Install in development mode
-pip install -e .
-
-# Install development dependencies
-pip install -e .[dev]
+# Create a virtual environment and install dependencies (requires uv)
+uv sync --group dev
 ```
 
 ## Code Style

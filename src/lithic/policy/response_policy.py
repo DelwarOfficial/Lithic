@@ -55,10 +55,18 @@ class ResponsePolicy:
         r"^(fix|feat|chore|docs|refactor|test|style|perf|ci|build|revert)[\s(:]"
     )
 
+    _DIFF_META_RE = re.compile(
+        r"^(diff --git|--- a/|\+\+\+ b/|index |@@ -|Binary files |"
+        r"\[compressed:|preserved code blocks|\.\.\. \[)"
+    )
+
     def format_commit(self, content: str) -> str:
         """Generate a conventional commit subject."""
         first = next(
-            (line for line in content.splitlines() if line.strip()),
+            (
+                line for line in content.splitlines()
+                if line.strip() and not self._DIFF_META_RE.match(line)
+            ),
             "update code",
         )
         first = re.sub(r"^[- *]+", "", first).strip()
@@ -74,7 +82,10 @@ class ResponsePolicy:
 
     def format_review(self, content: str) -> str:
         """Generate actionable review findings."""
-        lines = [line.strip() for line in content.splitlines() if line.strip()]
+        lines = [
+            line.strip() for line in content.splitlines()
+            if line.strip() and not self._DIFF_META_RE.match(line)
+        ]
         if not lines:
             return "No actionable findings."
         findings = []

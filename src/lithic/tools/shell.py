@@ -21,15 +21,24 @@ _DESTRUCTIVE_RULES: set[tuple[str, str]] = {
     ("rd", "/s"),
     ("del", "/s"),
     ("del", "/f"),
+    ("del", "/q"),
     ("deltree", ""),
     ("git", "reset"),
     ("git", "clean"),
+    ("git", "checkout"),
+    ("git", "branch -D"),
+    ("git", "push --force"),
+    ("git", "push -f"),
     ("drop", "table"),
     ("drop", "database"),
     ("format", "volume"),
     ("remove-item", ""),
     ("truncate", ""),
+    ("fsutil", "file setzerodata"),
+    ("copy", "nul"),
 }
+
+_DANGEROUS_PYTHON_KEYWORDS = {"shutil", "rmtree", "os.remove", "os.unlink", "send2trash"}
 
 
 def _is_destructive(command: list[str]) -> bool:
@@ -43,6 +52,10 @@ def _is_destructive(command: list[str]) -> bool:
                 return True
             if any(flag in arg for arg in args_lower):
                 return True
+    if cmd0 in {"python", "python3", "uv"}:
+        joined = " ".join(args_lower)
+        if any(kw in joined for kw in _DANGEROUS_PYTHON_KEYWORDS):
+            return True
     return False
 
 

@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import logging
 import os
+import re
 import time
 from collections.abc import Callable
 from typing import Any, TypeVar
@@ -13,6 +14,11 @@ F = TypeVar("F", bound=Callable[..., Any])
 
 _LOG = logging.getLogger("lithic.audit")
 _LOG_HANDLER: logging.Handler | None = None
+
+_SECRET_RE = re.compile(
+    r"(?i)(api[_-]?key|token|secret|password|authorization|bearer|auth[_-]?token)"
+    r"\s*[:=]\s*['\"]?[\w\-]+"
+)
 
 
 def _setup() -> None:
@@ -31,10 +37,24 @@ def _setup() -> None:
     _LOG_HANDLER = handler
 
 
+def _redact(value: str) -> str:
+    return _SECRET_RE.sub(lambda m: m.group(0).split("=")[0] + "=***", value)
+
+
+def _redact_obj(obj: object) -> object:
+    if isinstance(obj, str):
+        return _redact(obj)
+    if isinstance(obj, list):
+        return [_redact_obj(i) for i in obj]
+    if isinstance(obj, dict):
+        return {k: _redact_obj(v) for k, v in obj.items()}
+    return obj
+
+
 def _event(event: str, **fields: object) -> None:
     _setup()
     record = {"event": event, "ts": time.time(), **fields}
-    _LOG.info(json.dumps(record, default=str))
+    _LOG.info(json.dumps(_redact_obj(record), default=str))
 
 
 def tool_call(
