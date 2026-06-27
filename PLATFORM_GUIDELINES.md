@@ -88,8 +88,8 @@ pip install lithic-cli
 
 ### Resources
 
-- [Official Documentation](https://github.com/DelwarOfficial/Lithic/wiki)
-- [GitHub Issues](https://github.com/DelwarOfficial/Lithic/issues)
+- [Official Documentation](https://github.com/DelwarOfficial/Lithic-CLI/wiki)
+- [GitHub Issues](https://github.com/DelwarOfficial/Lithic-CLI/issues)
 - [Discord Community](https://discord.gg/lithic)
 
 ---

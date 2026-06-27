@@ -10,7 +10,7 @@ By participating in this project, you agree to abide by our Code of Conduct. Ple
 
 ### Reporting Issues
 
-- Check if the issue already exists in [GitHub Issues](https://github.com/DelwarOfficial/Lithic/issues)
+- Check if the issue already exists in [GitHub Issues](https://github.com/DelwarOfficial/Lithic-CLI/issues)
 - Provide a clear description of the problem
 - Include steps to reproduce, expected behavior, and actual behavior
 - Add your OS version, Python version, and relevant logs
@@ -44,7 +44,7 @@ By participating in this project, you agree to abide by our Code of Conduct. Ple
 
 ```bash
 # Clone the repository
-git clone https://github.com/DelwarOfficial/Lithic.git
+git clone https://github.com/DelwarOfficial/Lithic-CLI.git
 cd Lithic
 
 # Create a virtual environment
@@ -102,6 +102,6 @@ Adds the ability to query the knowledge graph using natural language.
 
 ## Questions?
 
-Open an issue or reach out via [GitHub Discussions](https://github.com/DelwarOfficial/Lithic/discussions).
+Open an issue or reach out via [GitHub Discussions](https://github.com/DelwarOfficial/Lithic-CLI/discussions).
 
 Thank you for contributing! 🚀

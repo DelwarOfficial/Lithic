@@ -54,5 +54,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PyPI package configuration
 - MIT License
 
-[Unreleased]: https://github.com/DelwarOfficial/Lithic/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/DelwarOfficial/Lithic/releases/tag/v0.1.0
+[Unreleased]: https://github.com/DelwarOfficial/Lithic-CLI/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/DelwarOfficial/Lithic-CLI/releases/tag/v0.1.0

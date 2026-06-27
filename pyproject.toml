@@ -25,9 +25,9 @@ dependencies = [
 headroom = ["headroom-ai[proxy,code,mcp,relevance]>=0.27.0"]
 
 [project.urls]
-Homepage = "https://github.com/DelwarOfficial/Lithic"
-Repository = "https://github.com/DelwarOfficial/Lithic"
-Issues = "https://github.com/DelwarOfficial/Lithic/issues"
+Homepage = "https://github.com/DelwarOfficial/Lithic-CLI"
+Repository = "https://github.com/DelwarOfficial/Lithic-CLI"
+Issues = "https://github.com/DelwarOfficial/Lithic-CLI/issues"
 
 [project.scripts]
 lithic = "lithic.cli:main"

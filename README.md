@@ -3,9 +3,9 @@
 Lithic is a graph-first developer agent toolkit for understanding codebases, compressing context, and producing concise engineering output.
 
 <p align="center">
-  <a href="https://github.com/DelwarOfficial/Lithic"><img src="https://img.shields.io/github/stars/DelwarOfficial/Lithic?style=flat&color=yellow" alt="Stars"></a>
-  <a href="https://github.com/DelwarOfficial/Lithic/commits/main"><img src="https://img.shields.io/github/last-commit/DelwarOfficial/Lithic?style=flat" alt="Last Commit"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/DelwarOfficial/Lithic?style=flat" alt="License"></a>
+  <a href="https://github.com/DelwarOfficial/Lithic-CLI"><img src="https://img.shields.io/github/stars/DelwarOfficial/Lithic-CLI?style=flat&color=yellow" alt="Stars"></a>
+  <a href="https://github.com/DelwarOfficial/Lithic-CLI/commits/main"><img src="https://img.shields.io/github/last-commit/DelwarOfficial/Lithic-CLI?style=flat" alt="Last Commit"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/DelwarOfficial/Lithic-CLI?style=flat" alt="License"></a>
   <a href="https://pypi.org/project/lithic-cli/"><img src="https://img.shields.io/pypi/v/lithic-cli" alt="PyPI"></a>
 </p>
 
@@ -16,7 +16,7 @@ Lithic is a graph-first developer agent toolkit for understanding codebases, com
   <a href="#platform-guidelines">Platform Guidelines</a>
 </p>
 
-[GitHub Repository](https://github.com/DelwarOfficial/Lithic)
+[GitHub Repository](https://github.com/DelwarOfficial/Lithic-CLI)
 
 Lithic brings together three complementary ideas in a clean adapter-based architecture:
 
@@ -206,9 +206,9 @@ These layers are coordinated by `lithic.orchestrator`, which is intentionally **
 
 ## Resources
 
-- [GitHub Repository](https://github.com/DelwarOfficial/Lithic)
-- [Issues](https://github.com/DelwarOfficial/Lithic/issues)
-- [Official Documentation](https://github.com/DelwarOfficial/Lithic/wiki)
+- [GitHub Repository](https://github.com/DelwarOfficial/Lithic-CLI)
+- [Issues](https://github.com/DelwarOfficial/Lithic-CLI/issues)
+- [Official Documentation](https://github.com/DelwarOfficial/Lithic-CLI/wiki)
 
 ## License
 
@@ -231,7 +231,7 @@ More architecture details are available in [`docs/architecture.md`](docs/archite
 ### Install
 
 ```powershell
-git clone https://github.com/DelwarOfficial/Lithic.git
+git clone https://github.com/DelwarOfficial/Lithic-CLI.git
 cd Lithic
 uv sync
 ```
