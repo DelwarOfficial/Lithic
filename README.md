@@ -40,6 +40,49 @@ Lithic is designed to improve all three:
 - **Deterministic compression** before model-facing calls
 - **Mode-aware response shaping** for review, commit, and concise workflows
 
+---
+
+## 💰 Token Cost Savings
+
+Lithic's compression cuts LLM costs dramatically — especially on tool output, diffs, and logs.
+
+| Scenario | Without Lithic | With Lithic | Savings |
+|----------|---------------|-------------|---------|
+| 50K-token diff → review | 50K input tokens | ~8K input tokens | **~84% fewer tokens** |
+| 200K-token log → compress | 200K input tokens | ~8K input tokens | **~96% fewer tokens** |
+| LLM response → concise mode | 2K output tokens | ~1.5K output tokens | **~25% fewer tokens** |
+
+### Monthly cost comparison (10M input + 2M output tokens)
+
+| Model | Raw cost/mo | With Lithic | You save |
+|-------|------------|-------------|---------|
+| Claude Opus 4.8 | $100.00 | **$29.50/mo** | 71% |
+| Claude Sonnet 4.6 | $60.00 | **$18.00/mo** | 70% |
+| GPT-5.4 | $45.00 | **$13.75/mo** | 69% |
+| GPT-4.1 | $36.00 | **$11.50/mo** | 68% |
+| Gemini 2.5 Pro | $25.00 | **$8.13/mo** | 67% |
+| Gemini 2.5 Flash | $5.50 | **$2.06/mo** | 63% |
+| Kimi K2.6 | $17.50 | **$5.63/mo** | 68% |
+| GLM-5.2 | $14.80 | **$4.85/mo** | 67% |
+| DeepSeek V4 Flash | $1.96 | **$0.73/mo** | 63% |
+
+*Lithic compresses tool output 80–92% and shapes responses 15–25% shorter. Actual savings depend on workload.*
+
+### Best model for each workflow
+
+| Workflow | Recommended model | Why |
+|----------|------------------|-----|
+| `lithic index .` | Claude Haiku 4.5 / GPT-4.1 Nano / Gemini 2.0 Flash-Lite | Fast, high-volume, cost-sensitive |
+| `lithic ask "..."` | Claude Sonnet 4.6 / GPT-5.4 / Gemini 2.5 Pro | Best code comprehension & reasoning |
+| `lithic review` | GPT-4.1 Nano / Claude Haiku 4.5 / Gemini 2.5 Flash | Fast + cheap for structured input |
+| `lithic commit` | Claude Haiku 4.5 / GPT-4o Mini / Gemini 2.0 Flash-Lite | Simple formatting task |
+| `lithic explain "..."` | Claude Sonnet 4.6 / GPT-4.1 / Gemini 2.5 Flash | Fast + cheap for focused queries |
+| Agentic loops | Claude Opus 4.8 / GPT-5.4 / Kimi K2.6 | Strong tool-use + long context |
+
+See the full [model comparison & cost analysis](docs/model-comparison.md) for pricing across all 17 models.
+
+---
+
 ## Quick Start
 
 ```bash
@@ -368,6 +411,8 @@ Primary variables:
 
 Legacy `UDA_*` variables are still accepted as a compatibility fallback.
 
+See the full [model comparison & cost analysis](docs/model-comparison.md) for pricing across OpenAI, Anthropic, Google, DeepSeek, Kimi, GLM, and more — plus estimated savings from Lithic's compression.
+
 More setup details are available in [`docs/setup.md`](docs/setup.md).
 
 ## Safety
@@ -401,6 +446,7 @@ Not yet implemented:
 
 - [`docs/architecture.md`](docs/architecture.md)
 - [`docs/setup.md`](docs/setup.md)
+- [`docs/model-comparison.md`](docs/model-comparison.md) — AI model pricing, cost impact, and provider comparison
 - [`docs/source-review.md`](docs/source-review.md)
 - [`docs/merge-notes.md`](docs/merge-notes.md)
 - [`docs/license-attribution.md`](docs/license-attribution.md)
