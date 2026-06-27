@@ -95,7 +95,7 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 
 Example:
 ```
-feat: add /lithic query command
+feat: add lithic ask command
 
 Adds the ability to query the knowledge graph using natural language.
 ```

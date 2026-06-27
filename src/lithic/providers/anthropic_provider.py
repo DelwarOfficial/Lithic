@@ -13,7 +13,7 @@ class AnthropicProvider(BaseProvider):
 
     def __init__(self, model: str | None = None):
         self.model = (
-            model or os.getenv("LITHIC_MODEL") or os.getenv("UDA_MODEL") or "claude-sonnet-4-5"
+            model or os.getenv("LITHIC_MODEL") or os.getenv("UDA_MODEL") or "gpt-4.1-mini"
         )
 
     def complete(self, messages: list[dict[str, Any]], **kwargs: Any) -> str:
