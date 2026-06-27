@@ -39,6 +39,7 @@ AI agents waste tokens reading your entire codebase. Lithic builds a live archit
 - **`lithic compress-file <file>`** — strip noise from tool output, logs, and diffs (up to 80% fewer tokens)
 - **`lithic review`** — concise diff review without the full context dump
 - **`lithic commit`** — generate Conventional Commit messages from staged changes
+- **`lithic upstream-status`** — check pinned Graphify, Headroom, and Caveman submodules
 
 ## Platform Guidelines
 
@@ -309,6 +310,7 @@ All commands are optimized for minimal token usage (~0.1-3K per call, compressio
 | `lithic commit` | Generate a Conventional Commit-style subject |
 | `lithic compress-file <file>` | Compress large text output safely |
 | `lithic stats` | Show graph and compression runtime stats |
+| `lithic upstream-status` | Check pinned upstream submodules against their remotes |
 | `lithic mcp` | Serve Lithic MCP tools over stdio |
 
 ## Configuration

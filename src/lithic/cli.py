@@ -11,6 +11,7 @@ from rich.console import Console
 from lithic.config import AgentConfig
 from lithic.mcp.server import serve
 from lithic.orchestrator import Orchestrator
+from lithic.updater import UpstreamChecker
 
 console = Console()
 
@@ -115,6 +116,20 @@ def stats(ctx: click.Context) -> None:
     console.print(f"Graph exists: {data['graph_exists']}")
     console.print(f"History count: {data['history_count']}")
     console.print(f"Compression calls: {compression['calls']}")
+
+
+@main.command("upstream-status")
+@click.option("--local-only", is_flag=True, help="Skip remote checks.")
+def upstream_status(local_only: bool) -> None:
+    """Check pinned upstream submodules."""
+    statuses = UpstreamChecker(Path.cwd()).check(remote=not local_only)
+    for item in statuses:
+        line = f"{item.name}: {item.status} {item.local_commit[:12]}"
+        if item.remote_commit:
+            line += f" remote={item.remote_commit[:12]}"
+        if item.error:
+            line += f" error={item.error}"
+        console.print(line)
 
 
 @main.command()

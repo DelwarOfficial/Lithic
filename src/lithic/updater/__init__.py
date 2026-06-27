@@ -8,6 +8,7 @@ from lithic.updater.plan_generator import PlanGenerator
 from lithic.updater.pr_preparer import PRPreparer
 from lithic.updater.risk_scanner import RiskScanner
 from lithic.updater.test_runner import TestRunner
+from lithic.updater.upstream_checker import UpstreamChecker, UpstreamStatus
 
 __all__ = [
     "RiskScanner",
@@ -18,4 +19,6 @@ __all__ = [
     "TestRunner",
     "CommitGenerator",
     "PRPreparer",
+    "UpstreamChecker",
+    "UpstreamStatus",
 ]

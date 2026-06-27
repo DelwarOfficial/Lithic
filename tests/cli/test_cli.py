@@ -1,3 +1,5 @@
+from types import SimpleNamespace
+
 from click.testing import CliRunner
 
 import lithic.cli as lithic_cli
@@ -31,6 +33,29 @@ def test_stats_command(monkeypatch) -> None:
     result = CliRunner().invoke(main, ["stats"])
     assert result.exit_code == 0
     assert "Compression calls: 3" in result.output
+
+
+def test_upstream_status_command(monkeypatch) -> None:
+    class FakeChecker:
+        def __init__(self, project_root):
+            self.project_root = project_root
+
+        def check(self, *, remote=True):
+            assert remote is False
+            return [
+                SimpleNamespace(
+                    name="graphify",
+                    status="up-to-date",
+                    local_commit="abc123456789",
+                    remote_commit="",
+                    error="",
+                )
+            ]
+
+    monkeypatch.setattr(lithic_cli, "UpstreamChecker", FakeChecker)
+    result = CliRunner().invoke(main, ["upstream-status", "--local-only"])
+    assert result.exit_code == 0
+    assert "graphify: up-to-date abc123456789" in result.output
 
 
 def test_lithic_package_entrypoint(monkeypatch) -> None:

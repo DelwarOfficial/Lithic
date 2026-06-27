@@ -1,13 +1,31 @@
 projects:
   graphify:
-    local_path: D:\websie\merge-skill\graphify-8
+    repo: https://github.com/safishamsi/graphify
+    branch: v8
+    commit: 8994b5500c9ff1e4d2314cb78abfce56f524a215
+    version: 0.8.49
+    local_path: vendor/graphify
     license: MIT
     integration: cli_adapter
+    tests:
+      - tests/graph
   headroom:
-    local_path: D:\websie\merge-skill\headroom-main
+    repo: https://github.com/chopratejas/headroom
+    branch: main
+    commit: c632023cc1ec61d15f8f8e86efe3b54d51604a64
+    version: 0.27.0
+    local_path: vendor/headroom
     license: Apache-2.0
     integration: optional_package_plus_fallback
+    tests:
+      - tests/compression
   caveman:
-    local_path: D:\websie\merge-skill\caveman-main
+    repo: https://github.com/JuliusBrussee/caveman
+    branch: main
+    commit: 25d22f864ad68cc447a4cb93aefde918aa4aec9f
+    version: 0.1.0
+    local_path: vendor/caveman
     license: MIT
     integration: policy_adaptation
+    tests:
+      - tests/policy
