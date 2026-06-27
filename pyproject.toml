@@ -4,20 +4,20 @@ version = "0.1.0"
 description = "Adapter-first unified coding agent combining graph indexing, compression, and concise response policy."
 readme = "README.md"
 authors = [
-    { name = "delwarnetwork", email = "delwarnetwork@gmail.com" }
+    { name = "Lithic CLI Contributors" }
 ]
 requires-python = ">=3.12"
 dependencies = [
-    "anthropic>=0.112.0",
-    "click>=8.4.2",
-    "graphifyy>=0.8.49",
+    "anthropic>=0.49.0",
+    "click>=8.1.8",
+    "graphifyy>=0.8.47",
     "httpx>=0.28.1",
-    "mcp>=1.28.1",
+    "mcp>=1.28.0,<2",
     "openai>=2.44.0",
-    "python-dotenv>=1.2.1",
-    "pydantic>=2.13.4",
-    "pyyaml>=6.0.3",
-    "rich>=15.0.0",
+    "python-dotenv>=1.0.0",
+    "pydantic>=2.10.0",
+    "pyyaml>=6.0",
+    "rich>=13.9.0",
 ]
 
 [project.optional-dependencies]
@@ -30,14 +30,13 @@ Issues = "https://github.com/DelwarOfficial/Lithic-CLI/issues"
 
 [project.scripts]
 lithic = "lithic.cli:main"
-lith = "lithic.cli:main"
 
 [dependency-groups]
 dev = [
     "mypy>=2.1.0",
-    "pytest>=9.1.1",
-    "pytest-asyncio>=1.4.0",
-    "ruff>=0.15.20",
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.25.0",
+    "ruff>=0.15.19",
 ]
 
 [tool.ruff]
@@ -47,6 +46,7 @@ exclude = ["vendor"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
+ignore = []
 
 [tool.mypy]
 python_version = "3.12"
@@ -55,8 +55,11 @@ warn_unused_configs = true
 disallow_untyped_defs = true
 
 [[tool.mypy.overrides]]
-module = ["graphifyy.*", "headroom_ai.*"]
+module = ["headroom.*", "yaml"]
 ignore_missing_imports = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/lithic"]
 
 [tool.uv]
 default-groups = ["dev"]
@@ -65,9 +68,6 @@ default-groups = ["dev"]
 testpaths = ["tests"]
 asyncio_mode = "auto"
 
-[tool.uv.build-backend]
-module-name = "lithic"
-
 [build-system]
-requires = ["uv_build>=0.11.19,<0.12.0"]
-build-backend = "uv_build"
+requires = ["hatchling>=1.27.0"]
+build-backend = "hatchling.build"

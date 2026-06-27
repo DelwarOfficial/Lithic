@@ -1,5 +1,7 @@
 from pathlib import Path
 
+import pytest
+
 from lithic.config import AgentConfig
 from lithic.orchestrator import Orchestrator
 
@@ -39,3 +41,55 @@ def test_commit_uses_diff(monkeypatch, tmp_path: Path) -> None:
     )
     out = orch.commit()
     assert out.startswith("fix:")
+
+
+@pytest.mark.asyncio
+async def test_async_ask_with_provider(monkeypatch, tmp_path: Path) -> None:
+    orch = _orch(tmp_path)
+    monkeypatch.setattr(orch.graph, "query", lambda q: "graph data")
+    monkeypatch.setattr(orch, "_async_llm_answer", lambda ctx, task: "llm answer")
+    result = await orch.async_ask("how auth?")
+    assert result is not None
+
+
+@pytest.mark.asyncio
+async def test_async_explain_with_provider(monkeypatch, tmp_path: Path) -> None:
+    orch = _orch(tmp_path)
+    monkeypatch.setattr(orch.graph, "explain", lambda c: f"about {c}")
+    monkeypatch.setattr(orch, "_async_llm_answer", lambda ctx, task: "llm answer")
+    result = await orch.async_explain("UserService")
+    assert result is not None
+
+
+def test_classify_returns_expected_types(tmp_path: Path) -> None:
+    orch = _orch(tmp_path)
+    assert orch.classify("review my changes") == "review"
+    assert orch.classify("commit staged changes") == "commit"
+    assert orch.classify("index this repo") == "index"
+    assert orch.classify("test everything") == "test"
+    assert orch.classify("explain how GraphService works") == "explain"
+    assert orch.classify("path A B") == "path"
+    assert orch.classify("fix the bug in parser") == "edit"
+    assert orch.classify("what is the architecture?") == "ask"
+
+
+def test_compress_file_too_large(tmp_path: Path) -> None:
+    orch = _orch(tmp_path)
+    big = tmp_path / "big.log"
+    big.write_text("x" * 200_000_000, encoding="utf-8")
+    result = orch.compress_file(str(big))
+    assert "file too large" in result
+
+
+def test_compress_file_small(tmp_path: Path) -> None:
+    orch = _orch(tmp_path)
+    f = tmp_path / "small.txt"
+    f.write_text("hello world", encoding="utf-8")
+    result = orch.compress_file(str(f))
+    assert "hello world" in result
+
+
+def test_review_with_no_changes(monkeypatch, tmp_path: Path) -> None:
+    orch = _orch(tmp_path)
+    monkeypatch.setattr("lithic.orchestrator.git.diff", lambda root, staged=False: "")
+    assert orch.review() == "No changes to review."

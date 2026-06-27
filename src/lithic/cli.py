@@ -2,17 +2,24 @@
 
 from __future__ import annotations
 
+import asyncio
 from pathlib import Path
 from typing import Any, cast
 
 import click
 from rich.console import Console
+from rich.progress import Progress, SpinnerColumn, TextColumn
 
 from lithic.config import AgentConfig
 from lithic.orchestrator import Orchestrator
 from lithic.updater import UpstreamChecker
 
 console = Console()
+
+
+def _run_async(coro: Any) -> Any:
+    """Run an async coroutine from a synchronous CLI command."""
+    return asyncio.run(coro)
 
 
 @click.group()
@@ -71,7 +78,14 @@ def index(ctx: click.Context, path: str) -> None:
 def ask(ctx: click.Context, question: str) -> None:
     """Ask an architecture/codebase question."""
     orch: Orchestrator = ctx.obj["orchestrator"]
-    console.print(orch.ask(question))
+    if orch.provider() is not None:
+        cols = [SpinnerColumn(), TextColumn("querying graph...")]
+        with Progress(*cols, console=console) as progress:
+            progress.add_task("query", total=None)
+            result = _run_async(orch.async_ask(question))
+    else:
+        result = orch.ask(question)
+    console.print(result)
 
 
 @main.command()
@@ -80,7 +94,14 @@ def ask(ctx: click.Context, question: str) -> None:
 def explain(ctx: click.Context, concept: str) -> None:
     """Explain a symbol, module, file, or concept."""
     orch: Orchestrator = ctx.obj["orchestrator"]
-    console.print(orch.explain(concept))
+    if orch.provider() is not None:
+        cols = [SpinnerColumn(), TextColumn("explaining concept...")]
+        with Progress(*cols, console=console) as progress:
+            progress.add_task("explain", total=None)
+            result = _run_async(orch.async_explain(concept))
+    else:
+        result = orch.explain(concept)
+    console.print(result)
 
 
 @main.command("path")

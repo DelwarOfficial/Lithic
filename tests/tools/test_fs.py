@@ -38,3 +38,17 @@ def test_read_text_truncated(tmp_path: Path) -> None:
     result = read_text(f, max_chars=100)
     assert len(result) <= 120
     assert "... [truncated] ..." in result
+
+
+def test_resolve_symlink_inside_root(tmp_path: Path) -> None:
+    target = tmp_path / "target.txt"
+    target.write_text("data", encoding="utf-8")
+    link = tmp_path / "link.txt"
+    link.symlink_to(target)
+    result = resolve_path_within_root(tmp_path, link)
+    assert result == target.resolve()
+
+
+def test_resolve_dot_dot_raises(tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match="must stay inside"):
+        resolve_path_within_root(tmp_path, "../outside.txt")

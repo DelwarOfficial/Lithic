@@ -72,6 +72,9 @@ def test_global_provider_options_override_config(monkeypatch) -> None:
         def __init__(self, config):
             captured["config"] = config
 
+        def provider(self):
+            return None
+
         def ask(self, question):
             return "answer"
 
@@ -113,3 +116,48 @@ def test_mcp_serve_invokes_server(monkeypatch) -> None:
 
     assert result.exit_code == 0
     assert called["serve"] is True
+
+
+def test_explain_command(monkeypatch) -> None:
+    monkeypatch.setattr(lithic_cli.Orchestrator, "explain", lambda self, concept: "explanation")
+    result = CliRunner().invoke(main, ["explain", "GraphService"])
+    assert result.exit_code == 0
+    assert "explanation" in result.output
+
+
+def test_review_command(monkeypatch) -> None:
+    monkeypatch.setattr(lithic_cli.Orchestrator, "review", lambda self: "review findings")
+    result = CliRunner().invoke(main, ["review"])
+    assert result.exit_code == 0
+
+
+def test_commit_command(monkeypatch) -> None:
+    monkeypatch.setattr(lithic_cli.Orchestrator, "commit", lambda self: "fix: bug")
+    result = CliRunner().invoke(main, ["commit"])
+    assert result.exit_code == 0
+
+
+def test_path_command(monkeypatch) -> None:
+    monkeypatch.setattr(
+        lithic_cli.Orchestrator, "path_between", lambda self, s, t: "A -> B -> C"
+    )
+    result = CliRunner().invoke(main, ["path", "A", "B"])
+    assert result.exit_code == 0
+
+
+def test_compress_file_command(monkeypatch, tmp_path) -> None:
+    f = tmp_path / "test.txt"
+    f.write_text("hello world", encoding="utf-8")
+    monkeypatch.setattr(
+        lithic_cli.Orchestrator, "compress_file", lambda self, path: "compressed"
+    )
+    result = CliRunner().invoke(main, ["compress-file", str(f)])
+    assert result.exit_code == 0
+
+
+def test_edit_command(monkeypatch) -> None:
+    monkeypatch.setattr(
+        lithic_cli.Orchestrator, "orient_edit", lambda self, task: "edit context"
+    )
+    result = CliRunner().invoke(main, ["edit", "fix the parser"])
+    assert result.exit_code == 0

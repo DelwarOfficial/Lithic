@@ -33,6 +33,10 @@ class Orchestrator:
         self.events.append(f"provider.{self.config.provider}")
         return self._llm.complete(messages, **kwargs)
 
+    async def async_complete(self, messages: list[dict[str, Any]], **kwargs: Any) -> str:
+        self.events.append(f"provider.{self.config.provider}")
+        return await self._llm.async_complete(messages, **kwargs)
+
     def classify(self, task: str) -> str:
         t = task.lower().strip()
         if t.startswith("review"):
@@ -67,6 +71,22 @@ class Orchestrator:
         except RuntimeError:
             return context
 
+    async def _async_llm_answer(self, context: str, task: str) -> str:
+        p = self.provider()
+        if p is None:
+            return context
+        messages = [
+            {
+                "role": "system",
+                "content": "You are a codebase expert. Answer concisely from context.",
+            },
+            {"role": "user", "content": f"Context:\n{context}\n\nQuestion: {task}"},
+        ]
+        try:
+            return await self._llm.async_complete(messages)
+        except RuntimeError:
+            return context
+
     def ask(self, question: str) -> str:
         self.events.append("graph.query")
         raw = self.graph.query(question)
@@ -74,11 +94,25 @@ class Orchestrator:
             raw = self._llm_answer(raw, question)
         return self.policy.shape(raw, self.config.response_mode)
 
+    async def async_ask(self, question: str) -> str:
+        self.events.append("graph.query")
+        raw = self.graph.query(question)
+        if self.provider() is not None:
+            raw = await self._async_llm_answer(raw, question)
+        return self.policy.shape(raw, self.config.response_mode)
+
     def explain(self, concept: str) -> str:
         self.events.append("graph.explain")
         raw = self.graph.explain(concept)
         if self.provider() is not None:
             raw = self._llm_answer(raw, f"Explain: {concept}")
+        return self.policy.shape(raw, self.config.response_mode)
+
+    async def async_explain(self, concept: str) -> str:
+        self.events.append("graph.explain")
+        raw = self.graph.explain(concept)
+        if self.provider() is not None:
+            raw = await self._async_llm_answer(raw, f"Explain: {concept}")
         return self.policy.shape(raw, self.config.response_mode)
 
     def path_between(self, source: str, target: str) -> str:

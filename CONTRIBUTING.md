@@ -47,7 +47,7 @@ By participating in this project, you agree to abide by our Code of Conduct. Ple
 git clone https://github.com/DelwarOfficial/Lithic-CLI.git
 cd Lithic-CLI
 
-# Create a virtual environment and install dependencies (requires uv)
+# Install dependencies (requires uv; pip install -e . is not supported for dev)
 uv sync --group dev
 ```
 

@@ -19,7 +19,7 @@ Cut context cost 80% · index any repo · ask architecture questions
   <a href="https://github.com/DelwarOfficial/Lithic-CLI"><img src="https://img.shields.io/github/stars/DelwarOfficial/Lithic-CLI?style=flat&color=yellow" alt="Stars"></a>
   <a href="https://github.com/DelwarOfficial/Lithic-CLI/commits/main"><img src="https://img.shields.io/github/last-commit/DelwarOfficial/Lithic-CLI?style=flat" alt="Last Commit"></a>
   <a href="LICENSE"><img src="https://img.shields.io/github/license/DelwarOfficial/Lithic-CLI?style=flat" alt="License"></a>
-  <a href="https://pypi.org/project/lithic-cli/"><img src="https://img.shields.io/pypi/v/lithic-cli" alt="PyPI"></a>
+  <a href="https://pypi.org/project/lithic-cli/"><img src="https://img.shields.io/badge/pypi-Coming%20Soon-blue" alt="PyPI"></a>
 </p>
 
 <p align="center">
@@ -226,10 +226,20 @@ More architecture details are available in [`docs/architecture.md`](docs/archite
 
 ### Install
 
+**Recommended (uv):**
+
 ```powershell
 git clone https://github.com/DelwarOfficial/Lithic-CLI.git
 cd Lithic-CLI
 uv sync
+```
+
+**Alternative (pip):**
+
+```powershell
+git clone https://github.com/DelwarOfficial/Lithic-CLI.git
+cd Lithic-CLI
+pip install -e .
 ```
 
 ### Optional Headroom extra
@@ -237,6 +247,8 @@ uv sync
 ```powershell
 uv sync --extra headroom
 ```
+
+On Windows, `headroom-ai` may require [Rust/MSVC build tools](https://rustup.rs/) when a pre-built wheel is unavailable. Lithic works without this extra by falling back to its built-in deterministic compressor.
 
 On some Windows environments, `headroom-ai` may require Rust/MSVC build tooling when a compatible wheel is unavailable. Lithic still works without that extra by falling back to its built-in deterministic compressor.
 
@@ -294,8 +306,6 @@ uv run lithic mcp serve
 
 All commands are optimized for minimal token usage (~0.1-3K per call, compression reduces 60-90%).
 
-> **Tip:** `lith` is a shorthand alias for `lithic`. Both commands work identically — use whichever is quicker to type.
-
 | Command | Purpose |
 | --- | --- |
 | `lithic index .` | Build or refresh the project graph |
@@ -316,7 +326,7 @@ Lithic exposes its core capabilities as an MCP (Model Context Protocol) server, 
 
 ### Claude Desktop Setup
 
-Add the following to your Claude Desktop configuration file (`claude_desktop_config.json`):
+Add the following to your Claude Desktop MCP configuration file (`mcp_config.json` or `claude_desktop_config.json`):
 
 ```json
 {
@@ -324,6 +334,20 @@ Add the following to your Claude Desktop configuration file (`claude_desktop_con
     "lithic": {
       "command": "uv",
       "args": ["run", "lithic", "mcp", "serve"],
+      "cwd": "/path/to/your/project"
+    }
+  }
+}
+```
+
+Or use the direct pip installation path:
+
+```json
+{
+  "mcpServers": {
+    "lithic": {
+      "command": "lithic",
+      "args": ["mcp", "serve"],
       "cwd": "/path/to/your/project"
     }
   }
@@ -356,7 +380,18 @@ Primary variables:
 - `ANTHROPIC_API_KEY`
 - `OPENROUTER_API_KEY`
 
-Legacy `UDA_*` variables are still accepted as a compatibility fallback.
+### Migration from Legacy UDA_* Variables
+
+Legacy `UDA_*` environment variables are deprecated and will be removed in a future release.
+
+| Old Variable | New Variable |
+|---|---|
+| `UDA_PROVIDER` | `LITHIC_PROVIDER` |
+| `UDA_MODEL` | `LITHIC_MODEL` |
+| `UDA_GRAPH_DIR` | `LITHIC_GRAPH_DIR` |
+| `UDA_RESPONSE_MODE` | `LITHIC_RESPONSE_MODE` |
+
+Rename these in your `.env` file or shell profile to ensure compatibility.
 
 See [docs/model-comparison.md](docs/model-comparison.md) for links to official provider pricing pages.
 

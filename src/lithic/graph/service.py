@@ -2,9 +2,34 @@
 
 from __future__ import annotations
 
+import time
 from pathlib import Path
 
 from lithic.graph.graphify_adapter import GraphifyAdapter
+
+
+class _TTLCache:
+    """Simple TTL cache for graph query results."""
+
+    def __init__(self, ttl: float = 60.0, maxsize: int = 128):
+        self._ttl = ttl
+        self._maxsize = maxsize
+        self._store: dict[str, tuple[float, str]] = {}
+
+    def get(self, key: str) -> str | None:
+        entry = self._store.get(key)
+        if entry is None:
+            return None
+        ts, value = entry
+        if time.monotonic() - ts > self._ttl:
+            del self._store[key]
+            return None
+        return value
+
+    def set(self, key: str, value: str) -> None:
+        if len(self._store) >= self._maxsize:
+            self._store.pop(next(iter(self._store)))
+        self._store[key] = (time.monotonic(), value)
 
 
 class GraphService:
@@ -12,19 +37,36 @@ class GraphService:
 
     def __init__(self, project_root: Path, graph_output_dir: Path | None = None) -> None:
         self._adapter = GraphifyAdapter(project_root, graph_output_dir)
+        self._cache = _TTLCache()
 
     @property
     def graph_path(self) -> Path:
         return self._adapter.graph_path
 
     def query(self, question: str) -> str:
-        return self._adapter.query(question)
+        cached = self._cache.get(question)
+        if cached is not None:
+            return cached
+        result = self._adapter.query(question)
+        self._cache.set(question, result)
+        return result
 
     def explain(self, concept: str) -> str:
-        return self._adapter.explain(concept)
+        cached = self._cache.get(concept)
+        if cached is not None:
+            return cached
+        result = self._adapter.explain(concept)
+        self._cache.set(concept, result)
+        return result
 
     def path_between(self, source: str, target: str) -> str:
-        return self._adapter.path_between(source, target)
+        key = f"path:{source}:{target}"
+        cached = self._cache.get(key)
+        if cached is not None:
+            return cached
+        result = self._adapter.path_between(source, target)
+        self._cache.set(key, result)
+        return result
 
     def build_graph(self, target_path: str = ".") -> Path:
         return self._adapter.build_graph(target_path)
@@ -34,3 +76,6 @@ class GraphService:
 
     def stats(self) -> dict[str, int | str]:
         return self._adapter.stats()
+
+    def clear_cache(self) -> None:
+        self._cache = _TTLCache()

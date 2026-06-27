@@ -11,7 +11,7 @@
 
 **Do not open a public GitHub issue for security vulnerabilities.**
 
-Report security issues via GitHub's private vulnerability reporting, or email the maintainer directly at delwarnetwork@gmail.com. Please include:
+Report security issues via [GitHub's private vulnerability reporting](https://github.com/DelwarOfficial/Lithic-CLI/security/advisories/new). Please include:
 
 - Description of the vulnerability
 - Steps to reproduce
@@ -57,4 +57,4 @@ Lithic is a **local development CLI tool** that combines graph indexing, compres
 
 ## Security Contact
 
-For security concerns, email delwarnetwork@gmail.com or use GitHub's private vulnerability reporting.
+For security concerns, use [GitHub's private vulnerability reporting](https://github.com/DelwarOfficial/Lithic-CLI/security/advisories/new).

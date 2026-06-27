@@ -5,8 +5,6 @@
 [submodule "vendor/headroom"]
 	path = vendor/headroom
 	url = https://github.com/chopratejas/headroom
-	branch = main
 [submodule "vendor/caveman"]
 	path = vendor/caveman
 	url = https://github.com/JuliusBrussee/caveman
-	branch = main

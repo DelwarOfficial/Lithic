@@ -1,28 +1,28 @@
 from pathlib import Path
 
-from lithic.updater import CommitGenerator, PlanGenerator, PRPreparer, RiskScanner
+from lithic.updater.upstream_checker import UpstreamChecker
 
 
-def test_commit_generator_returns_conventional_commit() -> None:
-    generator = CommitGenerator()
-    assert generator.generate("Updated auth redirect flow") == "fix: auth redirect flow"
+def test_checker_returns_empty_when_no_lock(tmp_path: Path) -> None:
+    checker = UpstreamChecker(tmp_path, tmp_path / "nonexistent.yml")
+    assert checker.check() == []
 
 
-def test_plan_generator_adds_test_step() -> None:
-    generator = PlanGenerator()
-    plan = generator.generate({"files_changed": ["src/lithic/cli.py"]})
-    assert plan[-1]["step"] == "test"
-
-
-def test_pr_preparer_builds_checklist() -> None:
-    preparer = PRPreparer()
-    payload = preparer.prepare("fix: cli", "Tighten CLI behavior", [{"action": "Run tests"}])
-    assert payload["title"] == "fix: cli"
-    assert payload["checklist"] == ["Run tests"]
-
-
-def test_risk_scanner_finds_subprocess_usage(tmp_path: Path) -> None:
-    file_path = tmp_path / "sample.py"
-    file_path.write_text("subprocess.run(['git', 'status'])", encoding="utf-8")
-    findings = RiskScanner(tmp_path).scan_file(file_path)
-    assert findings
+def test_checker_loads_lock_file(tmp_path: Path) -> None:
+    lock = tmp_path / "upstream.lock.yml"
+    lock.write_text(
+        "projects:\n"
+        "  graphify:\n"
+        "    repo: https://github.com/safishamsi/graphify\n"
+        "    branch: v8\n"
+        "    commit: abc123\n"
+        "    version: 0.8.49\n"
+        "    local_path: vendor/graphify\n"
+        "    license: MIT\n"
+        "    integration: cli_adapter\n",
+        encoding="utf-8",
+    )
+    checker = UpstreamChecker(tmp_path, lock)
+    results = checker.check(remote=False)
+    assert len(results) >= 1
+    assert results[0].name == "graphify"
