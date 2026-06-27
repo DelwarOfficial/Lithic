@@ -296,6 +296,8 @@ uv run lithic mcp
 
 ## CLI Commands
 
+All commands are optimized for minimal token usage (~0.1-3K per call, compression reduces 60-90%).
+
 | Command | Purpose |
 | --- | --- |
 | `lithic index .` | Build or refresh the project graph |
