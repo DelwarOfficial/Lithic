@@ -2,8 +2,8 @@ from pathlib import Path
 
 import pytest
 
-from lithic.config import AgentConfig
-from lithic.providers.service import LLMService
+from lithic_cli.config import AgentConfig
+from lithic_cli.providers.service import LLMService
 
 
 def _cfg(**kwargs) -> AgentConfig:

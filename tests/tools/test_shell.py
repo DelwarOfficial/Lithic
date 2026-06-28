@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from lithic.tools.shell import CommandError, _is_destructive, run
+from lithic_cli.tools.shell import CommandError, _is_destructive, run
 
 
 def test_is_destructive_catches_rm_rf() -> None:

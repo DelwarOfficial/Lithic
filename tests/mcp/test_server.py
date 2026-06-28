@@ -2,7 +2,7 @@ import time
 
 import pytest
 
-from lithic.mcp.server import _check_input_size, _RateLimiter
+from lithic_cli.mcp.server import _check_input_size, _RateLimiter
 
 
 def test_rate_limiter_allows_under_limit() -> None:

@@ -13,4 +13,4 @@ ENV PATH="/app/.venv/bin:$PATH"
 
 EXPOSE 8000
 
-ENTRYPOINT ["uv", "run", "lithic", "mcp", "serve"]
+ENTRYPOINT ["uv", "run", "lithic_cli", "mcp", "serve"]

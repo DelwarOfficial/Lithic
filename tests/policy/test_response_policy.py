@@ -1,6 +1,6 @@
 import pytest
 
-from lithic.policy.response_policy import ResponsePolicy
+from lithic_cli.policy.response_policy import ResponsePolicy
 
 
 def test_normal_mode_passthrough() -> None:

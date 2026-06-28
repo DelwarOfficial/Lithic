@@ -16,7 +16,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install dependencies
-        run: uv sync --group dev
+        run: uv sync --group dev --frozen
       - name: Lint
         run: uv run ruff check src/lithic/ tests/
       - name: Typecheck
@@ -35,7 +35,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
-        run: uv sync --group dev
+        run: uv sync --group dev --frozen
       - name: Test
         run: uv run pytest tests/ -q
 
@@ -47,7 +47,7 @@ jobs:
         uses: astral-sh/setup-uv@v7
         with:
           python-version: "3.12"
-      - name: Install with all extras
-        run: uv sync --group dev --extra headroom --extra llm --extra mcp
+      - name: Install with headroom extra
+        run: uv sync --group dev --extra headroom --frozen
       - name: Test with extras
         run: uv run pytest tests/ -q

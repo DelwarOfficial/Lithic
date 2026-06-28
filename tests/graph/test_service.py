@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from lithic.graph.service import GraphService
+from lithic_cli.graph.service import GraphService
 
 
 def test_ttl_cache_returns_cached_query(monkeypatch, tmp_path: Path) -> None:

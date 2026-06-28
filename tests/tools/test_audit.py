@@ -1,4 +1,4 @@
-from lithic.tools.audit import _redact, _redact_obj
+from lithic_cli.tools.audit import _redact, _redact_obj
 
 
 def test_redact_secrets() -> None:

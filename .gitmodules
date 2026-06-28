@@ -1,7 +1,6 @@
 [submodule "vendor/graphify"]
 	path = vendor/graphify
 	url = https://github.com/safishamsi/graphify
-	branch = v8
 [submodule "vendor/headroom"]
 	path = vendor/headroom
 	url = https://github.com/chopratejas/headroom

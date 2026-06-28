@@ -1,4 +1,4 @@
-from lithic.compression.headroom_adapter import HeadroomAdapter
+from lithic_cli.compression.headroom_adapter import HeadroomAdapter
 
 
 def test_compresses_long_text() -> None:

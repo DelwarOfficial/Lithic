@@ -28,7 +28,7 @@ Repository = "https://github.com/DelwarOfficial/Lithic-CLI"
 Issues = "https://github.com/DelwarOfficial/Lithic-CLI/issues"
 
 [project.scripts]
-lithic = "lithic.cli:main"
+lithic = "lithic_cli.cli:main"
 
 [dependency-groups]
 dev = [
@@ -57,7 +57,7 @@ module = ["headroom.*", "yaml", "openai", "anthropic", "mcp", "mcp.*"]
 ignore_missing_imports = true
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/lithic"]
+packages = ["src/lithic_cli"]
 
 [tool.uv]
 default-groups = ["dev"]

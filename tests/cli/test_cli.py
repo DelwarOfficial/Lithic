@@ -2,8 +2,8 @@ from types import SimpleNamespace
 
 from click.testing import CliRunner
 
-import lithic.cli as lithic_cli
-from lithic.cli import main
+import lithic_cli.cli as lithic_cli
+from lithic_cli.cli import main
 
 
 def test_ask_command(monkeypatch) -> None:
@@ -98,7 +98,7 @@ def test_invalid_mode_option_rejected() -> None:
 
 
 def test_mcp_without_subcommand_invokes_server(monkeypatch) -> None:
-    import lithic.mcp.server as mcp_server
+    import lithic_cli.mcp.server as mcp_server
 
     called = {"serve": False}
     monkeypatch.setattr(mcp_server, "serve", lambda: called.update(serve=True))
@@ -109,7 +109,7 @@ def test_mcp_without_subcommand_invokes_server(monkeypatch) -> None:
 
 
 def test_mcp_serve_invokes_server(monkeypatch) -> None:
-    import lithic.mcp.server as mcp_server
+    import lithic_cli.mcp.server as mcp_server
 
     called = {"serve": False}
     monkeypatch.setattr(mcp_server, "serve", lambda: called.update(serve=True))

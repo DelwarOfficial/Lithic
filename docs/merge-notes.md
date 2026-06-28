@@ -7,8 +7,8 @@
 - Added attribution in `THIRD_PARTY_NOTICES.md`.
 ## Merge Notes
 
-- `lithic.graph.graphify_adapter` is a subprocess-first wrapper around Graphify CLI behavior rather than a source merge.
-- `lithic.compression.headroom_adapter` uses Headroom when importable and falls back to deterministic compression when it is not.
-- `lithic.policy.response_policy` is an original Lithic implementation informed by Caveman-style brevity, with safety overrides for risky actions.
-- Provider wrappers are optional and isolated under `lithic.providers`.
-- Old `unified_agent` shim imports were removed from active codepaths and tests so the runtime package is natively `lithic.*`.
+- `lithic_cli.graph.graphify_adapter` is a subprocess-first wrapper around Graphify CLI behavior rather than a source merge.
+- `lithic_cli.compression.headroom_adapter` uses Headroom when importable and falls back to deterministic compression when it is not.
+- `lithic_cli.policy.response_policy` is an original Lithic implementation informed by Caveman-style brevity, with safety overrides for risky actions.
+- Provider wrappers are optional and isolated under `lithic_cli.providers`.
+- Old `unified_agent` shim imports were removed from active codepaths and tests so the runtime package is natively `lithic_cli.*`.

@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from lithic.updater.upstream_checker import UpstreamChecker
+from lithic_cli.updater.upstream_checker import UpstreamChecker
 
 
 def test_checker_returns_empty_when_no_lock(tmp_path: Path) -> None:

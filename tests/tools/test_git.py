@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from lithic.tools.git import diff, status
+from lithic_cli.tools.git import diff, status
 
 
 def test_status_returns_string(tmp_path: Path) -> None:

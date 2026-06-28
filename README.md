@@ -399,6 +399,16 @@ Primary variables:
 - `ANTHROPIC_API_KEY`
 - `OPENROUTER_API_KEY`
 
+### Missing API Key Behavior
+
+When no API key is found for the configured provider, the CLI exits with an error message listing which variable is missing. For example:
+
+```
+Error: OPENAI_API_KEY is not set. Set it in your environment or .env file.
+```
+
+`ask` / `explain` commands require a valid API key for the configured provider. Graph-only commands (`build`, `query`, `explain` without `--provider`) work without any API key.
+
 ### Migration from Legacy UDA_* Variables
 
 Legacy `UDA_*` environment variables are deprecated and will be removed in a future release.

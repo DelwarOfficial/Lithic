@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from lithic.config import AgentConfig
+from lithic_cli.config import AgentConfig
 
 
 def test_valid_mode_accepted() -> None:

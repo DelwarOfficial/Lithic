@@ -28,16 +28,16 @@ Lithic is a **local development CLI tool** that combines graph indexing, compres
 
 | Vector | Mitigation | File |
 |--------|------------|------|
-| **Path traversal** | `resolve_path_within_root()` resolves paths and rejects those outside project root. `_safe_target()` duplicates this check. | `src/lithic/tools/fs.py`, `src/lithic/graph/graphify_adapter.py` |
-| **Graph output deletion** | Graph output must use a dedicated `graphify-out` directory and a Lithic marker before non-empty cleanup. | `src/lithic/graph/graphify_adapter.py` |
-| **Destructive commands** | `_is_destructive()` checks structured command patterns (rm/rmdir/del/git destructive forms, PowerShell/cmd wrappers, dangerous Python snippets). Raises `ValueError` before execution. | `src/lithic/tools/shell.py` |
-| **Shell injection** | All subprocess calls use list form (no `shell=True`). `_sanitize_input()` blocks shell metacharacters and flag injection (`--` prefix). | `src/lithic/graph/graphify_adapter.py` |
-| **Symlink traversal** | `_rmtree_safe()` refuses to remove symlinks during directory cleanup. | `src/lithic/graph/graphify_adapter.py` |
-| **Input size limits** | Graph queries capped at 2000 chars. MCP inputs capped at 100K chars. Compression inputs capped at 500K chars. File compression capped at 100MB. | `src/lithic/graph/graphify_adapter.py`, `src/lithic/mcp/server.py` |
-| **Rate limiting** | MCP server enforces 60 calls per 60s window (configurable via `LITHIC_MCP_*` env vars). | `src/lithic/mcp/server.py` |
-| **Audit logging** | Security-relevant events are logged to JSON with key- and pattern-based secret redaction. | `src/lithic/tools/audit.py` |
-| **Response mode validation** | Unknown response modes are rejected for env and CLI config paths. | `src/lithic/config.py` |
-| **Branch name validation** | Git branch names validated against allowed charset before `git checkout -b`. | `src/lithic/updater/branch_manager.py` |
+| **Path traversal** | `resolve_path_within_root()` resolves paths and rejects those outside project root. `_safe_target()` duplicates this check. | `src/lithic_cli/tools/fs.py`, `src/lithic_cli/graph/graphify_adapter.py` |
+| **Graph output deletion** | Graph output must use a dedicated `graphify-out` directory and a Lithic marker before non-empty cleanup. | `src/lithic_cli/graph/graphify_adapter.py` |
+| **Destructive commands** | `_is_destructive()` checks structured command patterns (rm/rmdir/del/git destructive forms, PowerShell/cmd wrappers, dangerous Python snippets). Raises `ValueError` before execution. | `src/lithic_cli/tools/shell.py` |
+| **Shell injection** | All subprocess calls use list form (no `shell=True`). `_sanitize_input()` blocks shell metacharacters and flag injection (`--` prefix). | `src/lithic_cli/graph/graphify_adapter.py` |
+| **Symlink traversal** | `_rmtree_safe()` refuses to remove symlinks during directory cleanup. | `src/lithic_cli/graph/graphify_adapter.py` |
+| **Input size limits** | Graph queries capped at 2000 chars. MCP inputs capped at 100K chars. Compression inputs capped at 500K chars. File compression capped at 100MB. | `src/lithic_cli/graph/graphify_adapter.py`, `src/lithic_cli/mcp/server.py` |
+| **Rate limiting** | MCP server enforces 60 calls per 60s window (configurable via `LITHIC_MCP_*` env vars). | `src/lithic_cli/mcp/server.py` |
+| **Audit logging** | Security-relevant events are logged to JSON with key- and pattern-based secret redaction. | `src/lithic_cli/tools/audit.py` |
+| **Response mode validation** | Unknown response modes are rejected for env and CLI config paths. | `src/lithic_cli/config.py` |
+| **Branch name validation** | Git branch names validated against allowed charset before `git checkout -b`. | `src/lithic_cli/updater/branch_manager.py` |
 
 ### What Lithic Does NOT Do
 

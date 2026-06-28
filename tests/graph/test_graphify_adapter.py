@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from lithic.graph.graphify_adapter import GRAPH_OUTPUT_MARKER, GraphifyAdapter
+from lithic_cli.graph.graphify_adapter import GRAPH_OUTPUT_MARKER, GraphifyAdapter
 
 
 def test_graph_exists_false(tmp_path: Path) -> None:

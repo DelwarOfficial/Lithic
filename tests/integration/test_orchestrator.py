@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from lithic.config import AgentConfig
-from lithic.orchestrator import Orchestrator
+from lithic_cli.config import AgentConfig
+from lithic_cli.orchestrator import Orchestrator
 
 
 def _orch(tmp_path: Path) -> Orchestrator:
@@ -34,7 +34,7 @@ def test_stats_shape(tmp_path: Path) -> None:
 def test_commit_uses_diff(monkeypatch, tmp_path: Path) -> None:
     orch = _orch(tmp_path)
     monkeypatch.setattr(
-        "lithic.orchestrator.git.diff",
+        "lithic_cli.orchestrator.git.diff",
         lambda root, staged=False: "bug in auth redirect",
     )
     out = orch.commit()
@@ -71,5 +71,5 @@ def test_compress_file_small(tmp_path: Path) -> None:
 
 def test_review_with_no_changes(monkeypatch, tmp_path: Path) -> None:
     orch = _orch(tmp_path)
-    monkeypatch.setattr("lithic.orchestrator.git.diff", lambda root, staged=False: "")
+    monkeypatch.setattr("lithic_cli.orchestrator.git.diff", lambda root, staged=False: "")
     assert orch.review() == "No changes to review."

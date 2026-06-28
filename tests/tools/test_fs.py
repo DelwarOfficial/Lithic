@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from lithic.tools.fs import read_text, resolve_path_within_root
+from lithic_cli.tools.fs import read_text, resolve_path_within_root
 
 
 def test_resolve_within_root(tmp_path: Path) -> None:
