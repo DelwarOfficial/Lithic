@@ -43,13 +43,36 @@ By participating in this project, you agree to abide by our Code of Conduct. Ple
 ## Development Setup
 
 ```bash
-# Clone the repository
+# 1. Install uv (if not already installed)
+# On macOS (via Homebrew):
+brew install uv
+
+# On Windows (via winget):
+winget install astral.uv
+
+# On Linux or any platform (via pip):
+pip install uv
+
+# 2. Clone the repository
 git clone https://github.com/DelwarOfficial/Lithic-CLI.git
 cd Lithic-CLI
 
-# Install dependencies (requires uv; pip install -e . is not supported for dev)
+# 3. Install all dependencies (including dev tools)
 uv sync --group dev
+
+# 4. Install pre-commit hooks
+uv run pre-commit install
+
+# 5. Verify setup by running the test suite
+uv run pytest tests/ -q
+
+# 6. Run all checks
+uv run ruff check src/lithic_cli/ tests/
+uv run ruff format src/lithic_cli/ tests/
+uv run mypy src/lithic_cli/
 ```
+
+All commands use `uv run` — do not use `pip` or `python` directly.
 
 ## Code Style
 
