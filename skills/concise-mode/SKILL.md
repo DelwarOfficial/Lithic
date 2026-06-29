@@ -1,4 +1,4 @@
----
+﻿---
 name: concise-mode
 description: Produce short, clear coding-agent responses without losing exact technical details.
 ---

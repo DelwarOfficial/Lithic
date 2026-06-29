@@ -1,4 +1,4 @@
-# License Attribution
+﻿# License Attribution
 
 Lithic uses adapter and integration boundaries rather than vendoring upstream repositories into a single mixed codebase.
 

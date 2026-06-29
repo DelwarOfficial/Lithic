@@ -1,4 +1,4 @@
-# Third-Party Notices
+﻿# Third-Party Notices
 
 Lithic-CLI incorporates adapter wrappers and behavioral inspiration from the following open-source projects:
 

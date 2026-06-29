@@ -1,20 +1,20 @@
-<div align="center">
+﻿<div align="center">
 
 ```
-██████╗ ██╗     ██╗████████╗██╗  ██╗██╗ ██████╗    ██████╗██╗     ██╗
-██╔════╝██║     ██║╚══██╔══╝██║  ██║██║██╔════╝   ██╔════╝██║     ██║
-██║     ██║     ██║   ██║   ███████║██║██║        ██║     ██║     ██║
-██║     ██║     ██║   ██║   ██╔══██║██║██║        ██║     ██║     ██║
-╚██████╗███████╗██║   ██║   ██║  ██║██║╚██████╗   ╚██████╗███████╗██║
- ╚═════╝╚══════╝╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝ ╚═════╝    ╚═════╝╚══════╝╚═╝
+ _     _____ _______ _    _ _____ _____      _____ _     _____ 
+| |   |_   _|__   __| |  | |_   _|  __ \    / ____| |   |_   _|
+| |     | |    | |  | |__| | | | | |  | |  | |    | |     | |  
+| |     | |    | |  |  __  | | | | |  | |  | |    | |     | |  
+| |____| |_   | |  | |  | |_| |_| |__| |  | |____| |___ _| |_ 
+|______|___|  |_|  |_|  |_|_____|_____/    \_____|_____|_____|
 ```
 
-# 🪨 Lithic-CLI
+# Lithic-CLI
 
 **Enterprise-ready graph-first codebase intelligence platform**
 
 <p>
-  <strong>Cut context cost 80% · Real-time streaming · Production monitoring · Web dashboard</strong>
+  <strong>Cut context cost 80% | Real-time streaming | Production monitoring | Web dashboard</strong>
 </p>
 
 <p>
@@ -25,11 +25,11 @@
 </p>
 
 <p>
-  <a href="#-quick-start"><strong>🚀 Quick Start</strong></a> ·
-  <a href="#-installation"><strong>📦 Install</strong></a> ·
-  <a href="#-cli-commands"><strong>⚡ Commands</strong></a> ·
-  <a href="#-mcp-integration"><strong>🔌 MCP</strong></a> ·
-  <a href="#-architecture"><strong>🧠 Architecture</strong></a>
+  <a href="#quick-start"><strong>Quick Start</strong></a> |
+  <a href="#installation"><strong>Install</strong></a> |
+  <a href="#cli-commands"><strong>Commands</strong></a> |
+  <a href="#mcp-integration"><strong>MCP</strong></a> |
+  <a href="#architecture"><strong>Architecture</strong></a>
 </p>
 
 </div>
@@ -41,25 +41,25 @@ AI agents waste tokens reading your entire codebase. Lithic builds a live archit
 **Now with enterprise-grade architecture:** plugin system, multi-tier caching, async streaming, microservices, web dashboard, and advanced monitoring.
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│  📂 Codebase → 🕸️ Graph → 💾 Cache → ⚡ Stream → 🧠 Agent    │
-│             (80% fewer tokens + real-time updates)             │
-└─────────────────────────────────────────────────────────────────┘
++------------------------------------------------------------------+
+|  Codebase -> Graph -> Cache -> Stream -> Agent                  |
+|             (80% fewer tokens + real-time updates)              |
++------------------------------------------------------------------+
 ```
 
-<strong>🔑 Key Benefits</strong>
+**Key Benefits**
 
-- ⚡ **80% token reduction** — multi-tier caching + compression
-- 🕸️ **Graph-first understanding** — know architecture, not just files
-- 🔌 **MCP server included** — plug directly into Claude Desktop, Cursor, and more
-- 🧩 **Multi-provider ready** — OpenAI, Anthropic, OpenRouter, Ollama
-- 🏗️ **Enterprise architecture** — plugins, streaming, microservices, monitoring
-- 📊 **Web dashboard** — real-time monitoring and interactive queries
-- ⚙️ **Production ready** — 98/100 score with advanced monitoring
+- **80% token reduction** - multi-tier caching + compression
+- **Graph-first understanding** - know architecture, not just files
+- **MCP server included** - plug directly into Claude Desktop, Cursor, and more
+- **Multi-provider ready** - OpenAI, Anthropic, OpenRouter, Ollama
+- **Enterprise architecture** - plugins, streaming, microservices, monitoring
+- **Web dashboard** - real-time monitoring and interactive queries
+- **Production ready** - 98/100 score with advanced monitoring
 
 ---
 
-## 🚀 What It Does
+## What It Does
 
 | Command | Purpose |
 |---------|---------|
@@ -79,9 +79,9 @@ AI agents waste tokens reading your entire codebase. Lithic builds a live archit
 
 ---
 
-## 🖥️ Platform Guidelines
+## Platform Guidelines
 
-### 🍏 Mac Users
+### Mac Users
 
 #### Installation (single command)
 
@@ -91,17 +91,17 @@ uv tool install git+https://github.com/DelwarOfficial/Lithic-CLI.git
 pip install git+https://github.com/DelwarOfficial/Lithic-CLI.git
 ```
 
-See main 📦 Installation section for details and dev setup.
+See main Installation section for details and dev setup.
 
 #### Keyboard Shortcuts
 
 | Action | Shortcut |
 |--------|----------|
-| Open terminal | `Cmd + Space` → type "Terminal" |
+| Open terminal | `Cmd + Space` -> type "Terminal" |
 | Clear screen | `Cmd + K` |
 | Cancel running command | `Ctrl + C` |
 | Path autocomplete | `Tab` key |
-| Command history | `↑` / `↓` arrow keys |
+| Command history | `^` / `v` arrow keys |
 
 #### Common Issues & Fixes
 
@@ -109,7 +109,7 @@ See main 📦 Installation section for details and dev setup.
 - **Permission denied**: Use `sudo` with caution, or install with `--user` flag
 - **Headroom (opt)**: Rust build tools may be needed on Win for full speed. Falls back automatically.
 
-### 🪟 Windows Users
+### Windows Users
 
 #### Installation (single command)
 
@@ -119,17 +119,17 @@ uv tool install git+https://github.com/DelwarOfficial/Lithic-CLI.git
 pip install git+https://github.com/DelwarOfficial/Lithic-CLI.git
 ```
 
-See main 📦 Installation section.
+See main Installation section.
 
 #### Keyboard Shortcuts
 
 | Action | Shortcut |
 |--------|----------|
-| Open terminal | `Win + R` → type "cmd" or "powershell" |
+| Open terminal | `Win + R` -> type "cmd" or "powershell" |
 | Clear screen | `cls` (CMD) or `Clear-Host` (PowerShell) |
 | Cancel running command | `Ctrl + C` |
 | Path autocomplete | `Tab` key |
-| Command history | `↑` / `↓` arrow keys |
+| Command history | `^` / `v` arrow keys |
 
 #### Common Issues & Fixes
 
@@ -137,7 +137,7 @@ See main 📦 Installation section.
 - **Long paths**: Enable long path support in Windows (registry or group policy)
 - **Headroom (opt)**: May need Rust/MSVC for full build. Built-in compressor always works.
 
-### 🔧 Universal Guidelines
+### Universal Guidelines
 
 #### Prerequisites
 
@@ -153,82 +153,82 @@ See main 📦 Installation section.
 
 ---
 
-## ✨ Features
+## Features
 
 ### Core Intelligence
-- 🕸️ **Graph-powered indexing** — Build and refresh a project knowledge graph
-- 💬 **Natural language queries** — Ask architecture and codebase questions  
-- 🔍 **Symbol explanation** — Explain symbols, files, modules, and relationships
-- 🧩 **Path finding** — Find graph paths between concepts
-- 📦 **Smart compression** — Compress large file, shell, log, and diff output safely
-- 📝 **Review generation** — Generate concise review output
-- 💾 **Commit messages** — Generate Conventional Commit-style commit messages
-- 🔌 **MCP server** — Expose core capabilities over Model Context Protocol
+- **Graph-powered indexing** - Build and refresh a project knowledge graph
+- **Natural language queries** - Ask architecture and codebase questions  
+- **Symbol explanation** - Explain symbols, files, modules, and relationships
+- **Path finding** - Find graph paths between concepts
+- **Smart compression** - Compress large file, shell, log, and diff output safely
+- **Review generation** - Generate concise review output
+- **Commit messages** - Generate Conventional Commit-style commit messages
+- **MCP server** - Expose core capabilities over Model Context Protocol
 
 ### Enterprise Architecture
-- 🔧 **Plugin system** — Extensible providers for graph, compression, LLM, response
-- 💾 **Multi-tier caching** — Redis L2 + in-memory L1 with content-addressed keys
-- ⚡ **Async streaming** — Real-time file watching and processing pipeline
-- 🗄️ **Graph backends** — PostgreSQL and filesystem storage options
-- 🏢 **Microservices** — Distributed deployment with service discovery
-- 📊 **Web dashboard** — FastAPI + WebSocket real-time monitoring interface
-- 🚨 **Advanced monitoring** — APM, alerting, metrics collection, health checks
-- 🧠 **Multi-provider** — Support for OpenAI, Anthropic, OpenRouter, and Ollama
+- **Plugin system** - Extensible providers for graph, compression, LLM, response
+- **Multi-tier caching** - Redis L2 + in-memory L1 with content-addressed keys
+- **Async streaming** - Real-time file watching and processing pipeline
+- **Graph backends** - PostgreSQL and filesystem storage options
+- **Microservices** - Distributed deployment with service discovery
+- **Web dashboard** - FastAPI + WebSocket real-time monitoring interface
+- **Advanced monitoring** - APM, alerting, metrics collection, health checks
+- **Multi-provider** - Support for OpenAI, Anthropic, OpenRouter, and Ollama
 
 ### Production Features
-- 🐳 **Docker ready** — Container deployment with health checks
-- ☸️ **Kubernetes** — Manifest templates for distributed deployment
-- 📈 **Observability** — Prometheus metrics, distributed tracing, alerting
-- 🔒 **Enterprise auth** — Plugin-based authentication and authorization (roadmap)
-- 📊 **Performance monitoring** — Response times, error rates, resource usage
+- **Docker ready** - Container deployment with health checks
+- **Kubernetes** - Manifest templates for distributed deployment
+- **Observability** - Prometheus metrics, distributed tracing, alerting
+- **Enterprise auth** - Plugin-based authentication and authorization (roadmap)
+- **Performance monitoring** - Response times, error rates, resource usage
 
 ---
 
-## 🧠 Architecture
+## Architecture
 
 Lithic is a **production-ready platform** with enterprise architecture built on plugin-based providers and microservice-ready design:
 
 ```mermaid
 graph TB
-    subgraph Users["� Users & Agents"]
+    subgraph Users["[ICON] Users & Agents"]
         CLI["CLI Interface"]
         Web["Web Dashboard"]
         MCP["MCP Clients"]
     end
 
-    subgraph Gateway["🚪 API Gateway"]
+    subgraph Gateway["API Gateway"]
         Router["Request Router"]
         Auth["Authentication"]
         RateLimit["Rate Limiting"]
     end
 
-    subgraph Core["🧠 Core Orchestrator"]
+    subgraph Core["Core Orchestrator"]
         PluginMgr["Plugin Manager"]
         Cache["Multi-tier Cache"]
         Streaming["Async Pipeline"]
     end
 
-    subgraph Providers["� Plugin Providers"]
+    subgraph Providers["[ICON] Plugin Providers"]
         GraphP["Graph Provider"]
         CompressP["Compression Provider"] 
         LLMP["LLM Provider"]
         ResponseP["Response Provider"]
     end
 
-    subgraph Services["🏢 Microservices"]
+    subgraph Services["Microservices"]
         GraphSvc["Graph Service"]
         CompressSvc["Compression Service"]
         CacheSvc["Cache Service"]
         MonitorSvc["Monitor Service"]
     end
 
-    subgraph Storage["� Storage Backends"]
+    subgraph Storage["[ICON] Storage Backends"]
         Redis["Redis Cache"]
         Postgres["PostgreSQL"]
         FS["File System"]
     end
 
-    subgraph Monitor["📊 Monitoring"]
+    subgraph Monitor["Monitoring"]
         APM["APM Collector"]
         Alerts["Alert Manager"]
         Metrics["Metrics"]
@@ -277,7 +277,7 @@ graph TB
 
 1. **Request** enters via CLI, Web UI, or MCP
 2. **Gateway** handles auth, routing, rate limiting
-3. **Cache check** (L1 memory → L2 Redis) for instant responses
+3. **Cache check** (L1 memory -> L2 Redis) for instant responses
 4. **Plugin providers** handle graph queries, compression, LLM calls
 5. **Streaming pipeline** processes real-time updates
 6. **Microservices** scale individual components horizontally  
@@ -286,15 +286,15 @@ graph TB
 
 ---
 
-## 🔗 Resources
+## Resources
 
-- 📂 [GitHub Repository](https://github.com/DelwarOfficial/Lithic-CLI)
-- 🐛 [Issues](https://github.com/DelwarOfficial/Lithic-CLI/issues)
-- 📖 [Docs](docs/architecture.md)
+- [LINK] [GitHub Repository](https://github.com/DelwarOfficial/Lithic-CLI)
+- [LINK] [Issues](https://github.com/DelwarOfficial/Lithic-CLI/issues)
+- [LINK] [Docs](docs/architecture.md)
 
 ---
 
-## 📄 License
+## [LINK] License
 
 MIT
 
@@ -306,9 +306,9 @@ More architecture details and enterprise features are available in [`docs/archit
 
 ---
 
-## 📦 Installation
+## Installation
 
-### � Installation Options
+### Installation Options
 
 **Basic installation:**
 ```powershell
@@ -329,12 +329,12 @@ pip install "git+https://github.com/DelwarOfficial/Lithic-CLI.git[postgres]"  # 
 pip install "git+https://github.com/DelwarOfficial/Lithic-CLI.git[streaming]" # File watching
 ```
 
-### 📋 Requirements
+### Requirements
 
-- 🐍 Python 3.12+
-- ⚡ [uv](https://github.com/astral-sh/uv) — Fast Python package installer (recommended) or pip  
-- 🖥️ A shell environment (PowerShell, Terminal, or Bash)
-- 📦 Optional: Redis (for L2 caching), PostgreSQL (for persistent graph storage)
+- Python 3.12+
+- [uv](https://github.com/astral-sh/uv) - Fast Python package installer (recommended) or pip  
+- A shell environment (PowerShell, Terminal, or Bash)
+- Optional: Redis (for L2 caching), PostgreSQL (for persistent graph storage)
 
 ### For contributors / dev
 
@@ -364,7 +364,7 @@ On Windows, some optional dependencies may require [Rust/MSVC build tools](https
 
 ---
 
-## 🏃 Quick Start
+## Quick Start
 
 ### Basic Usage
 After single-command install above, run from any project:
@@ -481,13 +481,13 @@ After installing with `uv tool` or `pip`, use the direct command:
 
 Once connected, Claude can use Lithic tools directly:
 
-- **`lithic_graph_query`** — Query the graph for architecture insights
-- **`lithic_graph_explain`** — Get context-rich explanations
-- **`lithic_graph_path`** — Find a relationship path between concepts
-- **`lithic_compress`** — Reduce token usage for tool output
-- **`lithic_review`** — Review current diff concisely
-- **`lithic_commit`** — Generate Conventional Commit messages
-- **`lithic_stats`** — Return graph and compression stats
+- **`lithic_graph_query`** - Query the graph for architecture insights
+- **`lithic_graph_explain`** - Get context-rich explanations
+- **`lithic_graph_path`** - Find a relationship path between concepts
+- **`lithic_compress`** - Reduce token usage for tool output
+- **`lithic_review`** - Review current diff concisely
+- **`lithic_commit`** - Generate Conventional Commit messages
+- **`lithic_stats`** - Return graph and compression stats
 
 This makes Lithic a powerful backend for AI agents working with large codebases.
 
@@ -535,18 +535,18 @@ More setup details are available in [`docs/setup.md`](docs/setup.md).
 
 ---
 
-## 🛡️ Safety
+## Safety
 
 Lithic is designed to stay concise without becoming careless.
 
-- 🚫 Destructive shell patterns are refused unless explicitly approved
-- 🎯 Risky actions are shifted into clearer language instead of aggressive compression
-- ✅ Code blocks, commands, file paths, and error strings are preserved exactly during response shaping and compression
-- 🔒 Original upstream repositories are not modified by Lithic itself
+- Destructive shell patterns are refused unless explicitly approved
+- Risky actions are shifted into clearer language instead of aggressive compression
+- Code blocks, commands, file paths, and error strings are preserved exactly during response shaping and compression
+- Original upstream repositories are not modified by Lithic itself
 
 ---
 
-## 📊 Performance & Monitoring  
+## Performance & Monitoring  
 
 ### Cache Performance
 - **L1 Cache (Memory)**: 60-80% hit rate, sub-millisecond responses
@@ -576,51 +576,51 @@ Lithic is designed to stay concise without becoming careless.
 | **Reliability** | 96/100 | Multi-tier storage, graceful degradation |
 | **Security** | 90/100 | Input validation, safe defaults (auth roadmap) |
 
-## 📊 Current Scope And Roadmap
+## Current Scope And Roadmap
 
-### Production-Ready Features (✅ Implemented)
+### Production-Ready Features (Implemented)
 
 **Core Intelligence:**
-- 🕸️ Graph-backed indexing and querying with persistent storage
-- 📦 Multi-provider compression (deterministic + Headroom)
-- 📝 Concise policy modes with plugin-based response shaping
-- 🔌 CLI and MCP surfaces with full tool exposure
+- Graph-backed indexing and querying with persistent storage
+- Multi-provider compression (deterministic + Headroom)
+- Concise policy modes with plugin-based response shaping
+- CLI and MCP surfaces with full tool exposure
 
 **Enterprise Architecture:**
-- � Plugin system with abstract provider interfaces
-- 💾 Multi-tier caching (Redis + in-memory) with 95% hit rates  
-- ⚡ Async streaming pipeline with real-time file watching
-- 🗄️ Multiple storage backends (PostgreSQL, filesystem)
-- 🏢 Microservices architecture with service discovery
-- � Web dashboard with WebSocket real-time updates
-- 🚨 Advanced monitoring with APM, alerting, and metrics
+- Plugin system with abstract provider interfaces
+- Multi-tier caching (Redis + in-memory) with 95% hit rates  
+- Async streaming pipeline with real-time file watching
+- Multiple storage backends (PostgreSQL, filesystem)
+- Microservices architecture with service discovery
+- Web dashboard with WebSocket real-time updates
+- Advanced monitoring with APM, alerting, and metrics
 
-### Roadmap (🚧 Planned)
+### Roadmap (Planned)
 
 **Enhanced Intelligence:**
-- ✏️ Guarded file-edit execution with previews, diffs, and explicit approval
-- 🔄 Reversible decompression APIs for traceable context round-trips  
-- 🧰 IDE/plugin packaging for Cursor, Claude Desktop, and other MCP clients
-- 🤖 Advanced graph analytics with machine learning integration
+- Guarded file-edit execution with previews, diffs, and explicit approval
+- Reversible decompression APIs for traceable context round-trips  
+- IDE/plugin packaging for Cursor, Claude Desktop, and other MCP clients
+- Advanced graph analytics with machine learning integration
 
 **Enterprise Hardening:**
-- 🔐 Advanced authentication and authorization (OAuth, SAML, RBAC)
-- 🔒 End-to-end encryption for sensitive data
-- 📋 Audit logging and compliance reporting
-- 🌐 Multi-tenant isolation and resource quotas
-- 🚀 Auto-scaling based on load patterns
+- Advanced authentication and authorization (OAuth, SAML, RBAC)
+- End-to-end encryption for sensitive data
+- Audit logging and compliance reporting
+- Multi-tenant isolation and resource quotas
+- Auto-scaling based on load patterns
 
 **Platform Extensions:**
-- 📱 Mobile dashboard and notifications
-- 🔗 API gateway with advanced routing and transformation
-- 📈 Advanced analytics and business intelligence dashboards
-- 🛒 Plugin marketplace and community ecosystem
+- Mobile dashboard and notifications
+- API gateway with advanced routing and transformation
+- Advanced analytics and business intelligence dashboards
+- Plugin marketplace and community ecosystem
 
 **Maturity:** Lithic is **production-ready** today with enterprise architecture and 98/100 hardening score. Suitable for development teams, CI/CD pipelines, and production deployment with monitoring and scaling capabilities.
 
 ---
 
-## 🐳 Production Deployment
+## Production Deployment
 
 ### Docker Deployment
 
@@ -739,31 +739,31 @@ export LITHIC_WORKER_COUNT="4"
 
 ---
 
-## 📚 Documentation
+## Documentation
 
 ### Core Documentation
-- [`docs/architecture.md`](docs/architecture.md) — System architecture and design
-- [`docs/setup.md`](docs/setup.md) — Detailed setup instructions  
-- [`docs/model-comparison.md`](docs/model-comparison.md) — Provider pricing links and comparison
+- [`docs/architecture.md`](docs/architecture.md) - System architecture and design
+- [`docs/setup.md`](docs/setup.md) - Detailed setup instructions  
+- [`docs/model-comparison.md`](docs/model-comparison.md) - Provider pricing links and comparison
 
 ### Enterprise Features
-- [`docs/comprehensive-improvements.md`](docs/comprehensive-improvements.md) — Complete enterprise features guide
+- [`docs/comprehensive-improvements.md`](docs/comprehensive-improvements.md) - Complete enterprise features guide
 - Configuration examples for Redis, PostgreSQL, monitoring
 - Docker and Kubernetes deployment templates
 - Performance tuning and scaling recommendations
 
 ### Technical Documentation  
-- [`docs/merge-notes.md`](docs/merge-notes.md) — Merge notes
-- [`docs/license-attribution.md`](docs/license-attribution.md) — License attributions
+- [`docs/merge-notes.md`](docs/merge-notes.md) - Merge notes
+- [`docs/license-attribution.md`](docs/license-attribution.md) - License attributions
 
 ---
 
-## 📄 License and Attribution
+## License and Attribution
 
 Lithic includes adapter work and behavioral inspiration from:
 
-- 🕸️ [Graphify](https://github.com/safishamsi/graphify) — MIT
-- 📦 [Headroom](https://github.com/chopratejas/headroom) — Apache-2.0
-- 🧠 [Caveman](https://github.com/JuliusBrussee/caveman) — MIT
+- **Graphify** - MIT
+- **Headroom** - Apache-2.0
+- **Caveman** - MIT
 
 See [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) and the [`LICENSES/`](LICENSES) directory for full details.

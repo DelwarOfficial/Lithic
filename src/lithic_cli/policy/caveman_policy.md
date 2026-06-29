@@ -1,4 +1,4 @@
-# Lithic Caveman-Derived Policy
+﻿# Lithic Caveman-Derived Policy
 
 Use short, direct language for coding tasks while preserving exact technical meaning.
 

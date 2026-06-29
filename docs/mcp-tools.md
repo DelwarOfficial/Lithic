@@ -1,4 +1,4 @@
-# MCP Tools Reference
+﻿# MCP Tools Reference
 
 Lithic exposes its core capabilities through the Model Context Protocol (MCP) server. This document describes each tool, its input schema, and example outputs.
 

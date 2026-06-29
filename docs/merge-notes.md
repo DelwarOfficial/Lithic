@@ -1,4 +1,4 @@
-# Merge Notes
+﻿# Merge Notes
 
 - Wrapped Graphify through subprocess CLI calls. No Graphify source was copied into `src/`.
 - Wrapped Headroom through its public `headroom.compress` API when importable. Fallback compression is original code in this repo.

@@ -1,4 +1,4 @@
-# Setup
+﻿# Setup
 
 Single command install (recommended):
 

@@ -1,4 +1,4 @@
-# Contributing to Lithic
+﻿# Contributing to Lithic
 
 Thank you for your interest in contributing to Lithic! This document provides guidelines and instructions for contributing.
 
@@ -72,7 +72,7 @@ uv run ruff format src/lithic_cli/ tests/
 uv run mypy src/lithic_cli/
 ```
 
-All commands use `uv run` — do not use `pip` or `python` directly.
+All commands use `uv run` - do not use `pip` or `python` directly.
 
 ## Code Style
 
@@ -120,4 +120,4 @@ Adds the ability to query the knowledge graph using natural language.
 
 Open an issue or reach out via [GitHub Discussions](https://github.com/DelwarOfficial/Lithic-CLI/discussions).
 
-Thank you for contributing! 🚀
+Thank you for contributing!

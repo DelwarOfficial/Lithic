@@ -1,4 +1,4 @@
-# Source Code Review Guide
+﻿# Source Code Review Guide
 
 This document provides guidance for reviewing contributions to Lithic-CLI. As a graph-first agent tool, code reviews must ensure both correctness and safety.
 
@@ -6,13 +6,13 @@ This document provides guidance for reviewing contributions to Lithic-CLI. As a 
 
 ### Security & Safety (Always Required)
 
-- [ ] No `shell=True` in any subprocess call — must use list-form arguments
+- [ ] No `shell=True` in any subprocess call - must use list-form arguments
 - [ ] No hardcoded API keys, tokens, or secrets in code
 - [ ] File operations use `resolve_path_within_root()` and respect project boundary
 - [ ] Destructive operations (delete, overwrite) protected by safety guards
 - [ ] Subprocess commands have timeout set (120s default for large repos)
 - [ ] Secret redaction in audit logs covers all provider key formats
-- [ ] No path traversal vulnerabilities — verify `_safe_target()` usage
+- [ ] No path traversal vulnerabilities - verify `_safe_target()` usage
 - [ ] No symlink following without `is_symlink()` check before operations
 
 ### Code Quality (Always Required)
@@ -20,7 +20,7 @@ This document provides guidance for reviewing contributions to Lithic-CLI. As a 
 - [ ] `ruff check` passes (run: `uv run ruff check src/lithic_cli/ tests/`)
 - [ ] `ruff format` applied (run: `uv run ruff format src/lithic_cli/ tests/`)
 - [ ] `mypy src/lithic_cli/` passes with no errors (run: `uv run mypy src/lithic_cli/`)
-- [ ] Exception chaining present (B904 — use `raise NewError(...) from e`)
+- [ ] Exception chaining present (B904 - use `raise NewError(...) from e`)
 - [ ] Type hints complete on all new functions and parameters
 - [ ] Docstrings include examples for public APIs
 
@@ -137,6 +137,6 @@ Everything else looks great! Ready to merge once these three are addressed.
 
 ## References
 
-- [Security model](./architecture.md#safety-model) — subprocess, filesystem, and MCP safety
-- [Architecture](./architecture.md) — data flow and module boundaries
-- [Contributing guide](../CONTRIBUTING.md) — how to set up dev environment
+- [Security model](./architecture.md#safety-model) - subprocess, filesystem, and MCP safety
+- [Architecture](./architecture.md) - data flow and module boundaries
+- [Contributing guide](../CONTRIBUTING.md) - how to set up dev environment

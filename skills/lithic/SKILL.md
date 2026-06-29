@@ -1,4 +1,4 @@
----
+﻿---
 name: lithic
 description: >
   Graph-first + caveman full terse. Use /lithic, "lithic", "use lithic" to instantly activate
@@ -63,7 +63,7 @@ All via `uv run lithic <cmd>`. Use when agent needs graph or project cmds.
 ## When NOT to Use Lithic
 
 - Single-file, small changes where you already know the file path.
-- Exact string search or regex — use `grep` directly.
+- Exact string search or regex - use `grep` directly.
 - File contents you already have in context.
 
 ## Integration with Other Skills

@@ -1,4 +1,4 @@
----
+﻿---
 name: commit-writer
 description: Generate clean Conventional Commit messages.
 ---

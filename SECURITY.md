@@ -1,4 +1,4 @@
-# Security Policy
+﻿# Security Policy
 
 ## Supported Versions
 
@@ -43,17 +43,17 @@ Lithic is a **local development CLI tool** that combines graph indexing, compres
 
 - Does not run a network listener (MCP server communicates over stdio only)
 - Does not use `shell=True` in any subprocess call
-- Does not store credentials or API keys — all secrets read from environment variables
+- Does not store credentials or API keys - all secrets read from environment variables
 - Does not execute arbitrary code from source files
 - Does not follow symlinks during recursive directory operations
 
 ## Best Practices for Users
 
-1. **Keep Lithic updated** — Use the latest version for security fixes
-2. **Use virtual environments** — Isolate dependencies to reduce supply chain risks
-3. **Review graph output** — Generated HTML/JSON may reflect project internals; review before sharing
-4. **Do not commit `.env`** — API keys in `.env` are excluded by `.gitignore`; verify before committing
-5. **Pin dependencies** — Use `uv.lock` (committed) for reproducible, auditable builds
+1. **Keep Lithic updated** - Use the latest version for security fixes
+2. **Use virtual environments** - Isolate dependencies to reduce supply chain risks
+3. **Review graph output** - Generated HTML/JSON may reflect project internals; review before sharing
+4. **Do not commit `.env`** - API keys in `.env` are excluded by `.gitignore`; verify before committing
+5. **Pin dependencies** - Use `uv.lock` (committed) for reproducible, auditable builds
 
 ## Security Contact
 

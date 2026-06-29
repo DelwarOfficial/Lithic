@@ -1,6 +1,6 @@
-# AI Model Comparison & Cost Analysis
+﻿# AI Model Comparison & Cost Analysis
 
-Lithic is provider-agnostic — it works with any LLM backend.
+Lithic is provider-agnostic - it works with any LLM backend.
 
 Model pricing changes frequently. Check official provider pages for current rates:
 
