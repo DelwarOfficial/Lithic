@@ -2,10 +2,69 @@
 
 from __future__ import annotations
 
+import psutil
 import time
 from collections import defaultdict
 from threading import Lock
 from typing import Any
+
+
+class MetricsCollector:
+    """Collects and aggregates system and application metrics."""
+    
+    def __init__(self):
+        self._metrics = PrometheusMetrics()
+        self._start_time = time.time()
+    
+    def get_system_metrics(self) -> dict[str, Any]:
+        """Get current system metrics."""
+        try:
+            # Memory info
+            memory = psutil.virtual_memory()
+            
+            # CPU info
+            cpu_percent = psutil.cpu_percent()
+            
+            # Disk info
+            disk = psutil.disk_usage('/')
+            
+            return {
+                "memory": {
+                    "total": memory.total,
+                    "available": memory.available,
+                    "percent": memory.percent,
+                    "used": memory.used
+                },
+                "cpu": {
+                    "percent": cpu_percent,
+                    "count": psutil.cpu_count()
+                },
+                "disk": {
+                    "total": disk.total,
+                    "free": disk.free,
+                    "used": disk.used,
+                    "free_percent": (disk.free / disk.total) * 100
+                },
+                "uptime_seconds": time.time() - self._start_time
+            }
+        except Exception:
+            return {}
+    
+    def get_application_metrics(self) -> dict[str, Any]:
+        """Get application-specific metrics."""
+        return {
+            "requests_total": sum(self._metrics._counters.values()),
+            "response_times": dict(self._metrics._histograms),
+            "gauges": dict(self._metrics._gauges)
+        }
+    
+    def get_summary(self) -> dict[str, Any]:
+        """Get complete metrics summary."""
+        return {
+            "system": self.get_system_metrics(),
+            "application": self.get_application_metrics(),
+            "timestamp": time.time()
+        }
 
 
 class PrometheusMetrics:
@@ -127,3 +186,15 @@ def track_request_duration(operation: str, provider: str | None = None):
         
         return wrapper
     return decorator
+
+
+# Global metrics collector instance  
+_metrics_collector: MetricsCollector | None = None
+
+
+def get_metrics_collector() -> MetricsCollector:
+    """Get or create global metrics collector."""
+    global _metrics_collector
+    if _metrics_collector is None:
+        _metrics_collector = MetricsCollector()
+    return _metrics_collector

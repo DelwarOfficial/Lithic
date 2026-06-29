@@ -2,19 +2,25 @@
 
 from __future__ import annotations
 
+import asyncio
 import logging
 import re
+import time
 from pathlib import Path
 from typing import Any
 
 from lithic_cli.compression.headroom_adapter import HeadroomAdapter
 from lithic_cli.config import AgentConfig
 from lithic_cli.graph.service import GraphService
+from lithic_cli.graph.backends import get_default_backend
 from lithic_cli.policy.response_policy import ResponsePolicy
 from lithic_cli.providers.service import LLMService
+from lithic_cli.plugins.manager import get_plugin_manager
+from lithic_cli.caching import get_cache
 from lithic_cli.tools import git
 from lithic_cli.tracing import trace_operation
 from lithic_cli.tools.fs import resolve_path_within_root
+from lithic_cli.advanced_monitoring import get_apm_collector
 
 _log = logging.getLogger("lithic_cli.orchestrator")
 
@@ -24,10 +30,34 @@ class Orchestrator:
 
     def __init__(self, config: AgentConfig | None = None):
         self.config = config or AgentConfig.from_env()
+        
+        # Initialize core services
         self.graph = GraphService(self.config.project_root, self.config.graph_output_dir)
         self._llm = LLMService(self.config)
-        self.compression = HeadroomAdapter()
-        self.policy = ResponsePolicy()
+        
+        # Plugin-based providers with fallback to legacy adapters
+        self.plugin_manager = get_plugin_manager()
+        
+        # Try plugin-based compression first
+        compression_provider = self.plugin_manager.get_compression_provider()
+        if compression_provider:
+            self.compression = compression_provider
+        else:
+            # Fallback to legacy adapter
+            self.compression = HeadroomAdapter()
+        
+        # Response provider
+        response_provider = self.plugin_manager.get_response_provider()
+        if response_provider:
+            self.policy = response_provider
+        else:
+            # Fallback to legacy policy
+            self.policy = ResponsePolicy()
+        
+        # Advanced features
+        self.cache = get_cache()
+        self.graph_backend = get_default_backend()
+        self.apm = get_apm_collector()
         self.events: list[str] = []
 
     def provider(self) -> Any:
@@ -71,11 +101,40 @@ class Orchestrator:
     def ask(self, question: str) -> str:
         if not question.strip():
             return "Please provide a question."
-        self.events.append("graph.query")
-        raw = self.graph.query(question)
-        if self.provider() is not None:
-            raw = self._llm_answer(raw, question)
-        return self.policy.shape(raw, self.config.response_mode)
+        
+        # Start APM trace
+        trace_id = f"ask-{int(time.time() * 1000)}"
+        self.apm.start_trace(trace_id, "orchestrator.ask")
+        
+        try:
+            # Check cache first
+            cache_key = self.cache.content_hash(question, "query")
+            cached_result = self.cache.get(cache_key)
+            if cached_result:
+                self.events.append("cache.hit")
+                return self.policy.shape(cached_result, self.config.response_mode) if hasattr(self.policy, 'shape') else cached_result
+            
+            self.events.append("graph.query")
+            raw = self.graph.query(question)
+            
+            if self.provider() is not None:
+                raw = self._llm_answer(raw, question)
+            
+            # Cache result
+            self.cache.set(cache_key, raw, ttl=3600)
+            
+            # Shape response based on provider type
+            if hasattr(self.policy, 'shape_response'):
+                # Plugin-based response provider
+                result = self.policy.shape_response(raw, self.config.response_mode)
+                return result.data if result.success else raw
+            else:
+                # Legacy policy
+                return self.policy.shape(raw, self.config.response_mode)
+                
+        except Exception as e:
+            _log.error(f"Ask operation failed: {e}")
+            return f"Error processing query: {str(e)}"
 
     def explain(self, concept: str) -> str:
         if not concept.strip():
@@ -102,8 +161,22 @@ class Orchestrator:
             return f"git error: {exc}"
         if not diff.strip():
             return "No changes to review."
-        compressed = self.compression.compress_tool_output(diff)
-        return self.policy.shape(compressed, mode="review")
+        
+        # Use plugin-based compression if available
+        if hasattr(self.compression, 'compress_tool_output'):
+            # Plugin-based compression
+            result = self.compression.compress_tool_output(diff, "git")
+            compressed = result.data if result.success else diff
+        else:
+            # Legacy compression
+            compressed = self.compression.compress_tool_output(diff)
+        
+        # Shape response
+        if hasattr(self.policy, 'shape_response'):
+            result = self.policy.shape_response(compressed, "review")
+            return result.data if result.success else compressed
+        else:
+            return self.policy.shape(compressed, mode="review")
 
     def commit(self) -> str:
         diff = ""
@@ -119,8 +192,20 @@ class Orchestrator:
                 return f"chore: git error - {exc}"
         if not diff.strip():
             return "chore: no changes"
-        compressed = self.compression.compress_tool_output(diff, max_chars=12000)
-        return self.policy.shape(compressed, mode="commit")
+        
+        # Use plugin-based compression if available
+        if hasattr(self.compression, 'compress_tool_output'):
+            result = self.compression.compress_tool_output(diff, "git")
+            compressed = result.data if result.success else diff[:12000]
+        else:
+            compressed = self.compression.compress_tool_output(diff, max_chars=12000)
+        
+        # Shape response
+        if hasattr(self.policy, 'shape_response'):
+            result = self.policy.shape_response(compressed, "commit")
+            return result.data if result.success else compressed
+        else:
+            return self.policy.shape(compressed, mode="commit")
 
     def orient_edit(self, task: str) -> str:
         context = self.ask(f"Locate files and architecture context for edit task: {task}")
@@ -142,12 +227,16 @@ class Orchestrator:
         if size > 10_000_000:
             with path.open("r", encoding="utf-8", errors="replace") as fh:
                 head = fh.read(1_000_000)
-                return self.compression.compress_tool_output(
-                    head
-                    + f"\n... [file truncated: {size} bytes, showing first {len(head)} chars] ..."
-                )
-        content = path.read_text(encoding="utf-8", errors="replace")
-        return self.compression.compress_tool_output(content)
+                content = head + f"\n... [file truncated: {size} bytes, showing first {len(head)} chars] ..."
+        else:
+            content = path.read_text(encoding="utf-8", errors="replace")
+        
+        # Use plugin-based compression if available
+        if hasattr(self.compression, 'compress_text'):
+            result = self.compression.compress_text(content, "code")
+            return result.data if result.success else content
+        else:
+            return self.compression.compress_tool_output(content)
 
     def handle(self, task: str) -> str:
         kind = self.classify(task)
@@ -168,7 +257,10 @@ class Orchestrator:
         return {
             "graph_exists": self.graph.graph_exists(),
             "graph": self.graph.stats(),
-            "compression": self.compression.stats(),
+            "compression": self.compression.get_compression_stats() if hasattr(self.compression, 'get_compression_stats') else self.compression.stats(),
+            "cache": self.cache.stats(),
+            "plugins": self.plugin_manager.get_plugin_stats(),
+            "apm": self.apm.get_performance_metrics(),
             "history_count": len(self.events),
             "events": self.events,
         }

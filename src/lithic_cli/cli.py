@@ -151,24 +151,134 @@ def compress_file(ctx: click.Context, file: Path) -> None:
 
 
 @main.command()
+@click.option("--host", default="127.0.0.1", help="Host to bind to")
+@click.option("--port", default=8000, help="Port to bind to")
+@click.pass_context
+def web(ctx: click.Context, host: str, port: int) -> None:
+    """Start web dashboard."""
+    try:
+        import asyncio
+        from lithic_cli.web import get_web_dashboard
+        
+        dashboard = get_web_dashboard()
+        
+        console.print(f"[bold green]Starting web dashboard at http://{host}:{port}[/bold green]")
+        console.print("Press Ctrl+C to stop...")
+        
+        asyncio.run(dashboard.start(host, port))
+        
+    except ImportError:
+        console.print("[bold red]Error:[/bold red] Web dashboard dependencies not installed.")
+        console.print("Install with: pip install lithic-cli[web]")
+    except Exception as e:
+        console.print(f"[bold red]Error starting web dashboard:[/bold red] {e}")
+
+
+@main.command()
+@click.option("--service", multiple=True, help="Services to start (graph, compression, cache, gateway)")
+@click.pass_context
+def services(ctx: click.Context, service: tuple[str, ...]) -> None:
+    """Manage microservices."""
+    try:
+        import asyncio
+        from lithic_cli.microservices import get_service_manager, ServiceType, DEFAULT_SERVICES
+        
+        manager = get_service_manager()
+        
+        # If no specific services requested, start all defaults
+        if not service:
+            service = ("graph", "compression", "cache", "gateway")
+        
+        console.print(f"[bold blue]Starting services:[/bold blue] {', '.join(service)}")
+        
+        async def start_services():
+            for service_name in service:
+                try:
+                    service_type = ServiceType(service_name)
+                    
+                    # Find matching default config
+                    config = next(
+                        (cfg for cfg in DEFAULT_SERVICES if cfg.service_type == service_type),
+                        None
+                    )
+                    
+                    if config:
+                        success = await manager.start_service(config)
+                        if success:
+                            console.print(f"[green]✓[/green] Started {service_name}")
+                        else:
+                            console.print(f"[red]✗[/red] Failed to start {service_name}")
+                    else:
+                        console.print(f"[red]✗[/red] No config for {service_name}")
+                        
+                except ValueError:
+                    console.print(f"[red]✗[/red] Unknown service: {service_name}")
+            
+            # Keep services running
+            console.print("\n[bold green]Services running. Press Ctrl+C to stop...[/bold green]")
+            try:
+                while True:
+                    await asyncio.sleep(10)
+                    # Print status update
+                    stats = manager.get_service_stats()
+                    console.print(f"Running processes: {stats.get('running_processes', 0)}", end="\r")
+            except KeyboardInterrupt:
+                console.print("\n[bold yellow]Stopping services...[/bold yellow]")
+                await manager.stop_all_services()
+                console.print("[bold green]All services stopped.[/bold green]")
+        
+        asyncio.run(start_services())
+        
+    except ImportError:
+        console.print("[bold red]Error:[/bold red] Microservices dependencies not installed.")
+        console.print("Install with: pip install lithic-cli[enterprise]")
+    except Exception as e:
+        console.print(f"[bold red]Error managing services:[/bold red] {e}")
+
+
+@main.command()
 @click.pass_context
 def stats(ctx: click.Context) -> None:
     """Show graph and compression stats."""
     orch: Orchestrator = ctx.obj["orchestrator"]
     data = cast(dict[str, Any], orch.stats())
-    compression = cast(dict[str, Any], data["compression"])
+    
     table = Table(title="Lithic Stats", show_header=False)
     table.add_column("Key", style="cyan")
     table.add_column("Value", style="yellow")
+    
+    # Graph stats
     table.add_row("Graph exists", str(data["graph_exists"]))
     g = data.get("graph", {})
     table.add_row("Nodes", str(g.get("nodes", 0)))
     table.add_row("Edges", str(g.get("edges", 0)))
     table.add_row("History count", str(data["history_count"]))
-    table.add_row("Compression calls", str(compression["calls"]))
+    
+    # Compression stats
+    compression = cast(dict[str, Any], data.get("compression", {}))
+    if "calls" in compression:
+        table.add_row("Compression calls", str(compression["calls"]))
     if "savings_ratio" in compression:
         ratio = compression["savings_ratio"]
         table.add_row("Compression savings", f"{ratio:.1%}")
+    
+    # Cache stats  
+    cache_stats = data.get("cache", {})
+    if cache_stats:
+        hit_rate = cache_stats.get("hit_rate", 0)
+        table.add_row("Cache hit rate", f"{hit_rate:.1%}")
+        table.add_row("L2 available", "✓" if cache_stats.get("l2_available") else "✗")
+    
+    # Plugin stats
+    plugin_stats = data.get("plugins", {})
+    if plugin_stats:
+        table.add_row("Plugins loaded", str(plugin_stats.get("loaded", 0)))
+    
+    # APM stats
+    apm_stats = data.get("apm", {})
+    if amp_stats:
+        table.add_row("APM traces", str(apm_stats.get("total_traces", 0)))
+    
     console.print(table)
 
 

@@ -12,16 +12,29 @@ dependencies = [
     "graphifyy==0.8.49",
     "httpx==0.28.1",
     "python-dotenv==1.0.1",
-    "pydantic==2.10.3",
+    "pydantic>=2.10.3",
     "pyyaml==6.0.2",
     "rich==13.9.4",
+    "psutil==6.1.0",
 ]
 
 [project.optional-dependencies]
 headroom = ["headroom-ai[proxy,code,mcp,relevance]==0.27.0"]
 llm = ["anthropic==0.112.0", "openai==2.44.0"]
 mcp = ["mcp==1.28.1"]
-tracing = ["opentelemetry-api==1.28.2", "opentelemetry-sdk==1.28.2", "opentelemetry-exporter-jaeger==1.28.2"]
+tracing = ["opentelemetry-api>=1.26.0", "opentelemetry-sdk>=1.26.0"]
+redis = ["redis>=5.0.0"]
+postgres = ["psycopg2-binary>=2.9.0"]
+web = ["fastapi>=0.115.0", "uvicorn>=0.30.0"]
+streaming = ["watchfiles>=1.0.0"]
+enterprise = [
+    "redis>=5.0.0", 
+    "psycopg2-binary>=2.9.0", 
+    "fastapi>=0.115.0", 
+    "uvicorn>=0.30.0", 
+    "watchfiles>=1.0.0",
+    "prometheus-client>=0.20.0"
+]
 
 [project.urls]
 Homepage = "https://github.com/DelwarOfficial/Lithic-CLI"
@@ -33,10 +46,10 @@ lithic = "lithic_cli.cli:main"
 
 [dependency-groups]
 dev = [
-    "mypy==2.1.1",
-    "pytest==8.3.4",
-    "pytest-asyncio==1.4.0",
-    "ruff==0.15.20",
+    "mypy>=1.8.0",
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "ruff>=0.5.0",
 ]
 
 [tool.ruff]
