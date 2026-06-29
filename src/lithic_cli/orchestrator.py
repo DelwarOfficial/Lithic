@@ -111,7 +111,8 @@ class Orchestrator:
             cached_result = self.cache.get(cache_key)
             if cached_result:
                 self.events.append("cache.hit")
-                return self.policy.shape(cached_result, self.config.response_mode) if hasattr(self.policy, 'shape') else cached_result
+                return (self.policy.shape(cached_result, self.config.response_mode) 
+                       if hasattr(self.policy, 'shape') else cached_result)
             
             self.events.append("graph.query")
             raw = self.graph.query(question)
@@ -162,13 +163,13 @@ class Orchestrator:
             return "No changes to review."
         
         # Use plugin-based compression if available
+        # Use plugin-based compression if available
         if hasattr(self.compression, 'compress_tool_output'):
-            # Plugin-based compression
-            result = self.compression.compress_tool_output(diff, "git")
-            compressed = result.data if result.success else diff
+            # HeadroomAdapter returns string directly
+            compressed = self.compression.compress_tool_output(diff, max_chars=8000)
         else:
             # Legacy compression
-            compressed = self.compression.compress_tool_output(diff)
+            compressed = self.compression.compress_tool_output(diff, max_chars=8000)
         
         # Shape response
         if hasattr(self.policy, 'shape_response'):
@@ -192,10 +193,10 @@ class Orchestrator:
         if not diff.strip():
             return "chore: no changes"
         
-        # Use plugin-based compression if available
+        # Use plugin-based compression if available  
         if hasattr(self.compression, 'compress_tool_output'):
-            result = self.compression.compress_tool_output(diff, "git")
-            compressed = result.data if result.success else diff[:12000]
+            # HeadroomAdapter returns string directly
+            compressed = self.compression.compress_tool_output(diff, max_chars=12000)
         else:
             compressed = self.compression.compress_tool_output(diff, max_chars=12000)
         
@@ -232,8 +233,8 @@ class Orchestrator:
         
         # Use plugin-based compression if available
         if hasattr(self.compression, 'compress_text'):
-            result = self.compression.compress_text(content, "code")
-            return result.data if result.success else content
+            # HeadroomAdapter returns string directly  
+            return self.compression.compress_text(content, "code")
         else:
             return self.compression.compress_tool_output(content)
 
@@ -256,7 +257,9 @@ class Orchestrator:
         return {
             "graph_exists": self.graph.graph_exists(),
             "graph": self.graph.stats(),
-            "compression": self.compression.get_compression_stats() if hasattr(self.compression, 'get_compression_stats') else self.compression.stats(),
+            "compression": (self.compression.get_compression_stats() 
+                          if hasattr(self.compression, 'get_compression_stats') 
+                          else self.compression.stats()),
             "cache": self.cache.stats(),
             "plugins": self.plugin_manager.get_plugin_stats(),
             "apm": self.apm.get_performance_metrics(),

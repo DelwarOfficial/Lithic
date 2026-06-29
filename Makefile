@@ -7,7 +7,7 @@ test:
 	uv run pytest tests/ -q
 
 lint:
-	uv run ruff check src/lithic/ tests/
+	uv run ruff check src/lithic_cli/ tests/
 
 format:
 	uv run ruff format src/lithic/ tests/

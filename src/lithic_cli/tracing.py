@@ -20,7 +20,7 @@ _trace = None
 
 def _init_tracing():
     """Initialize OpenTelemetry tracing if enabled."""
-    global _tracer, _trace
+    global _tracer, _trace, _TRACING_ENABLED
     
     if not _TRACING_ENABLED or _tracer is not None:
         return

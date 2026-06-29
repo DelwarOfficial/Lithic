@@ -55,7 +55,7 @@ AI agents waste tokens reading your entire codebase. Lithic builds a live archit
 - **Multi-provider ready** - OpenAI, Anthropic, OpenRouter, Ollama
 - **Enterprise architecture** - plugins, streaming, microservices, monitoring
 - **Web dashboard** - real-time monitoring and interactive queries
-- **Production ready** - 98/100 score with advanced monitoring
+- **Development stage** - enterprise foundation with active development
 
 ---
 
@@ -186,7 +186,7 @@ See main Installation section.
 
 ## Architecture
 
-Lithic is a **production-ready platform** with enterprise architecture built on plugin-based providers and microservice-ready design:
+Lithic is a **development-stage platform** with enterprise architecture foundation built on plugin-based providers and microservice-ready design:
 
 ```mermaid
 graph TB

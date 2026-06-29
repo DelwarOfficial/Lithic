@@ -3,9 +3,7 @@
 from __future__ import annotations
 
 import asyncio
-import json
 import logging
-import os
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -13,10 +11,9 @@ from typing import Any
 from lithic_cli.caching import get_cache
 from lithic_cli.config import AgentConfig
 from lithic_cli.graph.backends import get_default_backend
-from lithic_cli.microservices import ServiceType, get_service_manager
+from lithic_cli.microservices import get_service_manager
 from lithic_cli.monitoring import get_metrics_collector
 from lithic_cli.plugins.manager import get_plugin_manager
-from lithic_cli.streaming import get_stream_pipeline
 
 _log = logging.getLogger("lithic_cli.web")
 
@@ -130,7 +127,7 @@ class WebDashboard:
                 }
             except Exception as e:
                 _log.error(f"Query error: {e}")
-                raise HTTPException(status_code=500, detail=str(e))
+                raise HTTPException(status_code=500, detail=str(e)) from e
         
         @self.app.post("/api/compress")
         async def compress_text(request: CompressionRequest):
@@ -160,7 +157,7 @@ class WebDashboard:
                     
             except Exception as e:
                 _log.error(f"Compression error: {e}")
-                raise HTTPException(status_code=500, detail=str(e))
+                raise HTTPException(status_code=500, detail=str(e)) from e
         
         @self.app.get("/api/cache/stats")
         async def get_cache_stats():
@@ -170,7 +167,7 @@ class WebDashboard:
                 return cache.stats()
             except Exception as e:
                 _log.error(f"Cache stats error: {e}")
-                raise HTTPException(status_code=500, detail=str(e))
+                raise HTTPException(status_code=500, detail=str(e)) from e
         
         @self.app.get("/api/plugins")
         async def list_plugins():
@@ -184,7 +181,7 @@ class WebDashboard:
                 }
             except Exception as e:
                 _log.error(f"Plugins error: {e}")
-                raise HTTPException(status_code=500, detail=str(e))
+                raise HTTPException(status_code=500, detail=str(e)) from e
         
         @self.app.get("/api/services")
         async def list_services():
@@ -210,7 +207,7 @@ class WebDashboard:
                 }
             except Exception as e:
                 _log.error(f"Services error: {e}")
-                raise HTTPException(status_code=500, detail=str(e))
+                raise HTTPException(status_code=500, detail=str(e)) from e
         
         @self.app.get("/api/metrics")
         async def get_metrics():
@@ -220,7 +217,7 @@ class WebDashboard:
                 return metrics.get_summary()
             except Exception as e:
                 _log.error(f"Metrics error: {e}")
-                raise HTTPException(status_code=500, detail=str(e))
+                raise HTTPException(status_code=500, detail=str(e)) from e
         
         @self.app.websocket("/ws/events")
         async def websocket_events(websocket: WebSocket):
@@ -322,7 +319,7 @@ class WebDashboard:
             
         except Exception as e:
             _log.error(f"Failed to get project details: {e}")
-            raise HTTPException(status_code=404, detail="Project not found")
+            raise HTTPException(status_code=404, detail="Project not found") from e
     
     def _get_dashboard_html(self) -> str:
         """Get dashboard HTML content."""
@@ -521,7 +518,9 @@ class WebDashboard:
                         const result = await response.json();
                         
                         if (result.success) {
-                            resultDiv.innerHTML = `<div style="margin-top:10px; padding:10px; background:#f8f9fa; border-radius:4px; white-space:pre-wrap;">${result.result}</div>`;
+                            resultDiv.innerHTML = `<div style="margin-top:10px; padding:10px; ` +
+                                `background:#f8f9fa; border-radius:4px; white-space:pre-wrap;">` +
+                                `${result.result}</div>`;
                         } else {
                             resultDiv.innerHTML = `<div style="color:red;">Error: ${result.error}</div>`;
                         }
@@ -582,7 +581,7 @@ class WebDashboard:
         for client in self._websocket_clients:
             try:
                 await client.close()
-            except:
+            except Exception:
                 pass
         self._websocket_clients.clear()
     
@@ -601,7 +600,7 @@ class WebDashboard:
         for client in self._websocket_clients:
             try:
                 await client.send_json(message)
-            except:
+            except Exception:
                 disconnected_clients.append(client)
         
         # Clean up disconnected clients

@@ -179,7 +179,8 @@ def track_request_duration(operation: str, provider: str | None = None):
                 _metrics.increment_counter("lithic_requests_total", {**labels, "status": "success"})
                 return result
             except Exception as e:
-                _metrics.increment_counter("lithic_requests_total", {**labels, "status": "error", "error_type": type(e).__name__})
+                _metrics.increment_counter("lithic_requests_total", 
+                                         {**labels, "status": "error", "error_type": type(e).__name__})
                 raise
             finally:
                 duration = time.time() - start_time

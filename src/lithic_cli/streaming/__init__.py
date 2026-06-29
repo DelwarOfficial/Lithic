@@ -6,7 +6,7 @@ import asyncio
 import logging
 from abc import ABC, abstractmethod
 from asyncio import Queue
-from collections.abc import AsyncGenerator, Callable
+from collections.abc import AsyncGenerator
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
