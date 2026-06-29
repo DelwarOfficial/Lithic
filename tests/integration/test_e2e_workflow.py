@@ -154,21 +154,30 @@ def test_mcp_server_lifecycle(temp_project):
         proc.stdin.write(json.dumps(init_request) + "\n")
         proc.stdin.flush()
         
-        # Read response (with timeout)
-        import select
+        # Read response with timeout using threading (works on all platforms)
+        import threading
         
-        if hasattr(select, 'select'):  # Unix
-            ready, _, _ = select.select([proc.stdout], [], [], 5.0)
-            if ready:
-                response = proc.stdout.readline()
-            else:
-                pytest.skip("MCP server didn't respond in time (Unix)")
-        else:  # Windows
-            # On Windows, just try to read with shorter timeout
+        response = None
+        read_error = None
+        
+        def read_response():
+            nonlocal response, read_error
             try:
                 response = proc.stdout.readline()
-            except:
-                pytest.skip("MCP server communication failed (Windows)")
+            except Exception as e:
+                read_error = e
+        
+        reader = threading.Thread(target=read_response)
+        reader.daemon = True
+        reader.start()
+        reader.join(timeout=5.0)
+        
+        if reader.is_alive():
+            # Thread still running - no response within timeout
+            pytest.skip("MCP server didn't respond in time")
+        
+        if read_error:
+            pytest.skip(f"MCP server communication failed: {read_error}")
         
         if response:
             data = json.loads(response)
