@@ -5,14 +5,13 @@ from __future__ import annotations
 import asyncio
 import logging
 import os
-import psutil
 import time
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Callable
+from typing import Any
 
 from lithic_cli.monitoring import MetricsCollector
 
@@ -44,9 +43,9 @@ class Alert:
     state: AlertState = AlertState.ACTIVE
     created_at: datetime = field(default_factory=datetime.now)
     updated_at: datetime = field(default_factory=datetime.now)
-    acknowledged_at: Optional[datetime] = None
-    resolved_at: Optional[datetime] = None
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    acknowledged_at: datetime | None = None
+    resolved_at: datetime | None = None
+    metadata: dict[str, Any] = field(default_factory=dict)
     
     def acknowledge(self, user: str = "system") -> None:
         """Acknowledge the alert."""
@@ -67,7 +66,7 @@ class AlertRule(ABC):
     """Abstract alert rule interface."""
     
     @abstractmethod
-    def evaluate(self, metrics: Dict[str, Any]) -> Optional[Alert]:
+    def evaluate(self, metrics: dict[str, Any]) -> Alert | None:
         """Evaluate rule against metrics and return alert if triggered."""
         pass
     
@@ -95,7 +94,7 @@ class ThresholdRule(AlertRule):
     def rule_id(self) -> str:
         return self.id
     
-    def evaluate(self, metrics: Dict[str, Any]) -> Optional[Alert]:
+    def evaluate(self, metrics: dict[str, Any]) -> Alert | None:
         """Evaluate threshold rule."""
         try:
             # Navigate metric path (e.g., "system.memory.usage_percent")
@@ -155,13 +154,13 @@ class RateRule(AlertRule):
         self.rate_threshold = rate_threshold
         self.time_window = time_window  # seconds
         self.severity = severity
-        self._history: List[tuple[datetime, float]] = []
+        self._history: list[tuple[datetime, float]] = []
     
     @property
     def rule_id(self) -> str:
         return self.id
     
-    def evaluate(self, metrics: Dict[str, Any]) -> Optional[Alert]:
+    def evaluate(self, metrics: dict[str, Any]) -> Alert | None:
         """Evaluate rate-based rule."""
         try:
             # Get current value
@@ -295,7 +294,7 @@ class FileChannel(AlertChannel):
 class WebhookChannel(AlertChannel):
     """HTTP webhook alert channel."""
     
-    def __init__(self, webhook_url: str, headers: Dict[str, str] = None):
+    def __init__(self, webhook_url: str, headers: dict[str, str] = None):
         self.webhook_url = webhook_url
         self.headers = headers or {"Content-Type": "application/json"}
     
@@ -346,11 +345,11 @@ class AlertManager:
     """Manages alert rules, evaluation, and notifications."""
     
     def __init__(self):
-        self.rules: Dict[str, AlertRule] = {}
-        self.channels: Dict[str, AlertChannel] = {}
-        self.active_alerts: Dict[str, Alert] = {}
-        self.alert_history: List[Alert] = []
-        self._evaluation_task: Optional[asyncio.Task] = None
+        self.rules: dict[str, AlertRule] = {}
+        self.channels: dict[str, AlertChannel] = {}
+        self.active_alerts: dict[str, Alert] = {}
+        self.alert_history: list[Alert] = []
+        self._evaluation_task: asyncio.Task | None = None
         self._running = False
     
     def add_rule(self, rule: AlertRule) -> None:
@@ -379,7 +378,7 @@ class AlertManager:
             return True
         return False
     
-    async def evaluate_rules(self, metrics: Dict[str, Any]) -> List[Alert]:
+    async def evaluate_rules(self, metrics: dict[str, Any]) -> list[Alert]:
         """Evaluate all rules against current metrics."""
         new_alerts = []
         
@@ -493,7 +492,7 @@ class AlertManager:
                 _log.error(f"Error in monitoring loop: {e}")
                 await asyncio.sleep(interval)
     
-    def get_alert_stats(self) -> Dict[str, Any]:
+    def get_alert_stats(self) -> dict[str, Any]:
         """Get alert statistics."""
         active_by_severity = {}
         for severity in AlertSeverity:
@@ -514,7 +513,7 @@ class AlertManager:
             "monitoring_active": self._running
         }
     
-    def get_active_alerts(self) -> List[Alert]:
+    def get_active_alerts(self) -> list[Alert]:
         """Get all active alerts."""
         return list(self.active_alerts.values())
 
@@ -523,13 +522,13 @@ class APMCollector:
     """Application Performance Monitoring collector."""
     
     def __init__(self):
-        self.traces: List[Dict[str, Any]] = []
-        self.spans: Dict[str, Dict[str, Any]] = {}
-        self.error_counts: Dict[str, int] = {}
-        self.response_times: Dict[str, List[float]] = {}
+        self.traces: list[dict[str, Any]] = []
+        self.spans: dict[str, dict[str, Any]] = {}
+        self.error_counts: dict[str, int] = {}
+        self.response_times: dict[str, list[float]] = {}
         self._start_time = time.time()
     
-    def start_trace(self, trace_id: str, operation: str) -> Dict[str, Any]:
+    def start_trace(self, trace_id: str, operation: str) -> dict[str, Any]:
         """Start a new trace."""
         trace = {
             "trace_id": trace_id,
@@ -542,7 +541,7 @@ class APMCollector:
         self.traces.append(trace)
         return trace
     
-    def start_span(self, span_id: str, operation: str, parent_span: str = None) -> Dict[str, Any]:
+    def start_span(self, span_id: str, operation: str, parent_span: str = None) -> dict[str, Any]:
         """Start a new span."""
         span = {
             "span_id": span_id,
@@ -556,7 +555,7 @@ class APMCollector:
         self.spans[span_id] = span
         return span
     
-    def finish_span(self, span_id: str, status: str = "success", tags: Dict[str, Any] = None) -> None:
+    def finish_span(self, span_id: str, status: str = "success", tags: dict[str, Any] = None) -> None:
         """Finish a span."""
         if span_id in self.spans:
             span = self.spans[span_id]
@@ -581,7 +580,7 @@ class APMCollector:
             if status == "error":
                 self.error_counts[operation] = self.error_counts.get(operation, 0) + 1
     
-    def get_performance_metrics(self) -> Dict[str, Any]:
+    def get_performance_metrics(self) -> dict[str, Any]:
         """Get performance metrics summary."""
         metrics = {
             "total_traces": len(self.traces),

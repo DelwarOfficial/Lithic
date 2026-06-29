@@ -2,9 +2,7 @@
 
 from __future__ import annotations
 
-import json
 import time
-from pathlib import Path
 
 from lithic_cli.config import AgentConfig
 from lithic_cli.graph.service import GraphService
@@ -54,7 +52,7 @@ class HealthChecker:
 
         # Check graph service initialization
         try:
-            graph = GraphService(self.config.project_root, self.config.graph_output_dir)
+            GraphService(self.config.project_root, self.config.graph_output_dir)
             checks["graph_service"] = "ready"
         except Exception as e:
             checks["graph_service"] = f"error: {e}"

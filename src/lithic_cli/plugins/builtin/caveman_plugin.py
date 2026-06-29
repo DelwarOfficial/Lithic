@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict, List
+from typing import Any
 
-from lithic_cli.plugins import ResponseProvider, PluginResult
+from lithic_cli.plugins import PluginResult, ResponseProvider
 from lithic_cli.policy.response_policy import ResponsePolicy
 
 
@@ -34,7 +34,7 @@ class CavemanPlugin(ResponseProvider):
     def version(self) -> str:
         return "1.9.0"
     
-    def shape_response(self, content: str, mode: str, context: Dict[str, Any] = None) -> PluginResult[str]:
+    def shape_response(self, content: str, mode: str, context: dict[str, Any] = None) -> PluginResult[str]:
         """Shape response content according to mode and context."""
         try:
             context = context or {}
@@ -51,13 +51,13 @@ class CavemanPlugin(ResponseProvider):
         except Exception as e:
             return PluginResult.error(f"Response shaping failed: {e}")
     
-    def get_available_modes(self) -> List[str]:
+    def get_available_modes(self) -> list[str]:
         """Get list of supported response modes."""
         base_modes = ["normal", "concise", "review", "commit", "safety_clear"]
         extended_modes = list(self._extended_modes.keys())
         return base_modes + extended_modes
     
-    def _caveman_lite_mode(self, content: str, context: Dict[str, Any]) -> str:
+    def _caveman_lite_mode(self, content: str, context: dict[str, Any]) -> str:
         """Light caveman compression - remove filler but keep structure."""
         lines = content.split('\n')
         processed = []
@@ -79,7 +79,7 @@ class CavemanPlugin(ResponseProvider):
         
         return '\n'.join(processed)
     
-    def _caveman_full_mode(self, content: str, context: Dict[str, Any]) -> str:
+    def _caveman_full_mode(self, content: str, context: dict[str, Any]) -> str:
         """Full caveman compression - drop articles, use fragments."""
         lines = content.split('\n')
         processed = []
@@ -129,7 +129,7 @@ class CavemanPlugin(ResponseProvider):
         
         return result
     
-    def _caveman_ultra_mode(self, content: str, context: Dict[str, Any]) -> str:
+    def _caveman_ultra_mode(self, content: str, context: dict[str, Any]) -> str:
         """Ultra caveman - maximum compression, arrows for causality."""
         result = self._caveman_full_mode(content, context)
         
@@ -164,7 +164,7 @@ class CavemanPlugin(ResponseProvider):
         
         return result
     
-    def _wenyan_lite_mode(self, content: str, context: Dict[str, Any]) -> str:
+    def _wenyan_lite_mode(self, content: str, context: dict[str, Any]) -> str:
         """Light classical Chinese style compression.""" 
         # This is a simplified approximation - real wenyan would need proper linguistics
         result = self._caveman_full_mode(content, context)
@@ -176,7 +176,7 @@ class CavemanPlugin(ResponseProvider):
         
         return result
     
-    def _wenyan_full_mode(self, content: str, context: Dict[str, Any]) -> str:
+    def _wenyan_full_mode(self, content: str, context: dict[str, Any]) -> str:
         """Full classical Chinese style (simplified approximation)."""
         result = self._wenyan_lite_mode(content, context)
         
@@ -198,7 +198,7 @@ class CavemanPlugin(ResponseProvider):
         
         return result
     
-    def _technical_brief_mode(self, content: str, context: Dict[str, Any]) -> str:
+    def _technical_brief_mode(self, content: str, context: dict[str, Any]) -> str:
         """Technical executive brief format."""
         lines = content.split('\n')
         
@@ -219,7 +219,7 @@ class CavemanPlugin(ResponseProvider):
         
         return '\n'.join(technical_lines[:10])  # Limit to top 10 points
     
-    def _executive_summary_mode(self, content: str, context: Dict[str, Any]) -> str:
+    def _executive_summary_mode(self, content: str, context: dict[str, Any]) -> str:
         """Executive summary format."""
         lines = content.split('\n')
         
@@ -255,7 +255,7 @@ class CavemanPlugin(ResponseProvider):
         
         return '\n'.join(summary_parts)
     
-    def health_check(self) -> PluginResult[Dict[str, Any]]:
+    def health_check(self) -> PluginResult[dict[str, Any]]:
         """Check if response formatting is working."""
         try:
             # Test basic functionality

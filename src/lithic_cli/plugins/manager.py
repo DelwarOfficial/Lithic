@@ -6,11 +6,14 @@ import importlib
 import json
 import logging
 from pathlib import Path
-from typing import Any, Dict, List, Type, TypeVar, Optional
+from typing import Any, TypeVar
 
 from lithic_cli.plugins import (
-    GraphProvider, CompressionProvider, ResponseProvider, LLMProvider,
-    PluginMetadata, PluginResult
+    CompressionProvider,
+    GraphProvider,
+    LLMProvider,
+    PluginMetadata,
+    ResponseProvider,
 )
 
 _log = logging.getLogger("lithic_cli.plugins")
@@ -21,18 +24,18 @@ T = TypeVar('T', GraphProvider, CompressionProvider, ResponseProvider, LLMProvid
 class PluginManager:
     """Manages plugin discovery, loading, and lifecycle."""
     
-    def __init__(self, plugin_dirs: List[Path] = None):
+    def __init__(self, plugin_dirs: list[Path] = None):
         self.plugin_dirs = plugin_dirs or [Path.cwd() / "plugins"]
-        self._plugins: Dict[str, Dict[str, Any]] = {
+        self._plugins: dict[str, dict[str, Any]] = {
             "graph": {},
             "compression": {},
             "response": {},
             "llm": {}
         }
-        self._instances: Dict[str, Any] = {}
-        self._metadata: Dict[str, PluginMetadata] = {}
+        self._instances: dict[str, Any] = {}
+        self._metadata: dict[str, PluginMetadata] = {}
     
-    def discover_plugins(self) -> Dict[str, List[PluginMetadata]]:
+    def discover_plugins(self) -> dict[str, list[PluginMetadata]]:
         """Discover all available plugins from plugin directories."""
         discovered = {
             "graph": [],
@@ -93,7 +96,7 @@ class PluginManager:
             _log.error(f"Failed to load plugin {plugin_name}: {e}")
             return False
     
-    def load_all_plugins(self) -> Dict[str, int]:
+    def load_all_plugins(self) -> dict[str, int]:
         """Load all discovered and enabled plugins."""
         self.discover_plugins()
         
@@ -146,7 +149,7 @@ class PluginManager:
         """Get LLM provider instance."""
         return self.get_provider("llm", name)
     
-    def list_providers(self, provider_type: str = None) -> Dict[str, List[str]]:
+    def list_providers(self, provider_type: str = None) -> dict[str, list[str]]:
         """List all available providers by type."""
         if provider_type:
             return {provider_type: list(self._plugins.get(provider_type, {}).keys())}
@@ -156,7 +159,7 @@ class PluginManager:
             for ptype, providers in self._plugins.items()
         }
     
-    def health_check_all(self) -> Dict[str, Dict[str, Any]]:
+    def health_check_all(self) -> dict[str, dict[str, Any]]:
         """Run health checks on all loaded plugins."""
         results = {}
         
@@ -200,7 +203,7 @@ class PluginManager:
         _log.info(f"Unloaded plugin {plugin_name}")
         return True
     
-    def get_plugin_stats(self) -> Dict[str, Any]:
+    def get_plugin_stats(self) -> dict[str, Any]:
         """Get statistics about loaded plugins."""
         return {
             "discovered": len(self._metadata),

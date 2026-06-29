@@ -6,10 +6,11 @@ import asyncio
 import logging
 from abc import ABC, abstractmethod
 from asyncio import Queue
+from collections.abc import AsyncGenerator, Callable
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
-from typing import Any, AsyncGenerator, Callable, Dict, List, Optional, Union
+from typing import Any
 
 _log = logging.getLogger("lithic_cli.streaming")
 
@@ -28,7 +29,7 @@ class StreamEvent:
     type: EventType
     data: Any
     timestamp: datetime
-    metadata: Dict[str, Any] = None
+    metadata: dict[str, Any] = None
     
     def __post_init__(self):
         if self.metadata is None:
@@ -58,11 +59,11 @@ class AsyncStreamPipeline:
     """Composable async stream processing pipeline."""
     
     def __init__(self, buffer_size: int = 1000):
-        self.processors: List[StreamProcessor] = []
+        self.processors: list[StreamProcessor] = []
         self.buffer_size = buffer_size
         self._running = False
         self._input_queue: Queue = None
-        self._tasks: List[asyncio.Task] = []
+        self._tasks: list[asyncio.Task] = []
     
     def add_processor(self, processor: StreamProcessor) -> AsyncStreamPipeline:
         """Add processor to pipeline."""
@@ -101,7 +102,7 @@ class AsyncStreamPipeline:
         self._tasks.clear()
         _log.info("Stopped stream pipeline")
     
-    async def push(self, data: Any, metadata: Dict[str, Any] = None) -> None:
+    async def push(self, data: Any, metadata: dict[str, Any] = None) -> None:
         """Push data into pipeline."""
         if not self._running:
             raise RuntimeError("Pipeline not started")
@@ -139,7 +140,7 @@ class AsyncStreamPipeline:
                 for final_event in current_events:
                     yield final_event
                     
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 # No events to process, continue
                 continue
             except Exception as e:
@@ -156,7 +157,7 @@ class AsyncStreamPipeline:
 class FileWatchProcessor(StreamProcessor):
     """Processor for file system events."""
     
-    def __init__(self, watch_paths: List[str], patterns: List[str] = None):
+    def __init__(self, watch_paths: list[str], patterns: list[str] = None):
         self.watch_paths = watch_paths
         self.patterns = patterns or ["**/*.py", "**/*.md", "**/*.json"]
         self._watcher = None

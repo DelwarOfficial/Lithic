@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
 
-from lithic_cli.plugins import CompressionProvider, PluginResult
 from lithic_cli.compression.headroom_adapter import HeadroomAdapter
+from lithic_cli.plugins import CompressionProvider, PluginResult
 
 
 class HeadroomPlugin(CompressionProvider):
@@ -43,7 +43,7 @@ class HeadroomPlugin(CompressionProvider):
         except Exception as e:
             return PluginResult.error(f"Tool output compression failed: {e}")
     
-    def _get_tool_config(self, tool_name: str) -> Dict[str, Any]:
+    def _get_tool_config(self, tool_name: str) -> dict[str, Any]:
         """Get compression configuration for specific tools."""
         tool_configs = {
             "git": {"max_chars": 50000, "preserve_structure": True},
@@ -58,7 +58,7 @@ class HeadroomPlugin(CompressionProvider):
         
         return tool_configs.get(tool_name, tool_configs["default"])
     
-    def get_compression_stats(self) -> PluginResult[Dict[str, Any]]:
+    def get_compression_stats(self) -> PluginResult[dict[str, Any]]:
         """Get compression statistics."""
         try:
             stats = self._adapter.stats()
@@ -66,7 +66,7 @@ class HeadroomPlugin(CompressionProvider):
         except Exception as e:
             return PluginResult.error(f"Stats retrieval failed: {e}")
     
-    def health_check(self) -> PluginResult[Dict[str, Any]]:
+    def health_check(self) -> PluginResult[dict[str, Any]]:
         """Check if Headroom is available and functional."""
         try:
             # Test compression with small input

@@ -3,13 +3,12 @@
 from __future__ import annotations
 
 import hashlib
-import json
 import logging
 import os
 import time
 from abc import ABC, abstractmethod
 from threading import Lock
-from typing import Any, Dict, Optional, Union
+from typing import Any
 
 _log = logging.getLogger("lithic_cli.caching")
 
@@ -18,12 +17,12 @@ class CacheBackend(ABC):
     """Abstract cache backend interface."""
     
     @abstractmethod
-    def get(self, key: str) -> Optional[bytes]:
+    def get(self, key: str) -> bytes | None:
         """Get value by key."""
         pass
     
     @abstractmethod
-    def set(self, key: str, value: bytes, ttl: Optional[int] = None) -> bool:
+    def set(self, key: str, value: bytes, ttl: int | None = None) -> bool:
         """Set key-value pair with optional TTL."""
         pass
     
@@ -43,12 +42,12 @@ class CacheBackend(ABC):
         pass
     
     @abstractmethod
-    def stats(self) -> Dict[str, Any]:
+    def stats(self) -> dict[str, Any]:
         """Get cache statistics."""
         pass
     
     @abstractmethod
-    def health_check(self) -> Dict[str, Any]:
+    def health_check(self) -> dict[str, Any]:
         """Check backend health."""
         pass
 
@@ -58,13 +57,13 @@ class MemoryCacheBackend(CacheBackend):
     
     def __init__(self, max_size: int = 1000):
         self.max_size = max_size
-        self._cache: Dict[str, Dict[str, Any]] = {}
+        self._cache: dict[str, dict[str, Any]] = {}
         self._access_order: list[str] = []
         self._lock = Lock()
         self._hits = 0
         self._misses = 0
     
-    def get(self, key: str) -> Optional[bytes]:
+    def get(self, key: str) -> bytes | None:
         with self._lock:
             if key not in self._cache:
                 self._misses += 1
@@ -86,7 +85,7 @@ class MemoryCacheBackend(CacheBackend):
             self._hits += 1
             return entry['value']
     
-    def set(self, key: str, value: bytes, ttl: Optional[int] = None) -> bool:
+    def set(self, key: str, value: bytes, ttl: int | None = None) -> bool:
         with self._lock:
             expires = time.time() + ttl if ttl else None
             
@@ -125,7 +124,7 @@ class MemoryCacheBackend(CacheBackend):
             self._access_order.clear()
             return True
     
-    def stats(self) -> Dict[str, Any]:
+    def stats(self) -> dict[str, Any]:
         with self._lock:
             total_requests = self._hits + self._misses
             hit_rate = self._hits / total_requests if total_requests > 0 else 0
@@ -142,7 +141,7 @@ class MemoryCacheBackend(CacheBackend):
                 ) / (1024 * 1024)
             }
     
-    def health_check(self) -> Dict[str, Any]:
+    def health_check(self) -> dict[str, Any]:
         return {"healthy": True, "backend": "memory", "size": len(self._cache)}
 
 
@@ -150,7 +149,7 @@ class RedisCacheBackend(CacheBackend):
     """Redis cache backend with connection pooling."""
     
     def __init__(self, host: str = "localhost", port: int = 6379, 
-                 db: int = 0, password: Optional[str] = None, 
+                 db: int = 0, password: str | None = None, 
                  key_prefix: str = "lithic:"):
         self.host = host
         self.port = port  
@@ -180,7 +179,7 @@ class RedisCacheBackend(CacheBackend):
         """Add prefix to key."""
         return f"{self.key_prefix}{key}"
     
-    def get(self, key: str) -> Optional[bytes]:
+    def get(self, key: str) -> bytes | None:
         if not self._redis:
             return None
         
@@ -190,7 +189,7 @@ class RedisCacheBackend(CacheBackend):
             _log.warning(f"Redis get failed: {e}")
             return None
     
-    def set(self, key: str, value: bytes, ttl: Optional[int] = None) -> bool:
+    def set(self, key: str, value: bytes, ttl: int | None = None) -> bool:
         if not self._redis:
             return False
         
@@ -234,7 +233,7 @@ class RedisCacheBackend(CacheBackend):
             _log.warning(f"Redis clear failed: {e}")
             return False
     
-    def stats(self) -> Dict[str, Any]:
+    def stats(self) -> dict[str, Any]:
         if not self._redis:
             return {"type": "redis", "connected": False}
         
@@ -254,7 +253,7 @@ class RedisCacheBackend(CacheBackend):
             _log.warning(f"Redis stats failed: {e}")
             return {"type": "redis", "connected": False, "error": str(e)}
     
-    def health_check(self) -> Dict[str, Any]:
+    def health_check(self) -> dict[str, Any]:
         if not self._redis:
             return {"healthy": False, "backend": "redis", "error": "Not connected"}
         
@@ -272,7 +271,7 @@ class MultiTierCache:
         self.l1 = MemoryCacheBackend(l1_size)
         
         # Try to initialize L2 (Redis or disk)
-        self.l2: Optional[CacheBackend] = None
+        self.l2: CacheBackend | None = None
         if enable_redis:
             redis_config = self._get_redis_config()
             if redis_config:
@@ -285,7 +284,7 @@ class MultiTierCache:
         self._misses = 0
         self._lock = Lock()
     
-    def _get_redis_config(self) -> Optional[Dict[str, Any]]:
+    def _get_redis_config(self) -> dict[str, Any] | None:
         """Get Redis configuration from environment."""
         redis_url = os.getenv("REDIS_URL") or os.getenv("LITHIC_REDIS_URL")
         if redis_url:
@@ -307,7 +306,7 @@ class MultiTierCache:
         
         return {"host": host, "port": port, "db": db, "password": password}
     
-    def get(self, key: str) -> Optional[str]:
+    def get(self, key: str) -> str | None:
         """Get value with multi-tier lookup."""
         # Try L1 first
         value = self.l1.get(key)
@@ -330,7 +329,7 @@ class MultiTierCache:
             self._misses += 1
         return None
     
-    def set(self, key: str, value: str, ttl: Optional[int] = None) -> bool:
+    def set(self, key: str, value: str, ttl: int | None = None) -> bool:
         """Set value in both tiers."""
         value_bytes = value.encode('utf-8')
         
@@ -363,7 +362,7 @@ class MultiTierCache:
         hashable = f"{content}:{algorithm}:v1"
         return hashlib.sha256(hashable.encode()).hexdigest()[:16]
     
-    def stats(self) -> Dict[str, Any]:
+    def stats(self) -> dict[str, Any]:
         """Get comprehensive cache statistics."""
         with self._lock:
             total_requests = self._hits_l1 + self._hits_l2 + self._misses
@@ -381,7 +380,7 @@ class MultiTierCache:
         
         return stats
     
-    def health_check(self) -> Dict[str, Any]:
+    def health_check(self) -> dict[str, Any]:
         """Check health of all cache tiers."""
         return {
             "l1": self.l1.health_check(),
@@ -390,7 +389,7 @@ class MultiTierCache:
 
 
 # Global cache instance
-_global_cache: Optional[MultiTierCache] = None
+_global_cache: MultiTierCache | None = None
 
 
 def get_cache() -> MultiTierCache:

@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
-import psutil
 import time
 from collections import defaultdict
 from threading import Lock
 from typing import Any
+
+import psutil
 
 
 class MetricsCollector:

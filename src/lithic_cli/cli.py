@@ -158,6 +158,7 @@ def web(ctx: click.Context, host: str, port: int) -> None:
     """Start web dashboard."""
     try:
         import asyncio
+
         from lithic_cli.web import get_web_dashboard
         
         dashboard = get_web_dashboard()
@@ -181,7 +182,8 @@ def services(ctx: click.Context, service: tuple[str, ...]) -> None:
     """Manage microservices."""
     try:
         import asyncio
-        from lithic_cli.microservices import get_service_manager, ServiceType, DEFAULT_SERVICES
+
+        from lithic_cli.microservices import DEFAULT_SERVICES, ServiceType, get_service_manager
         
         manager = get_service_manager()
         
@@ -276,7 +278,7 @@ def stats(ctx: click.Context) -> None:
     
     # APM stats
     apm_stats = data.get("apm", {})
-    if amp_stats:
+    if apm_stats:
         table.add_row("APM traces", str(apm_stats.get("total_traces", 0)))
     
     console.print(table)

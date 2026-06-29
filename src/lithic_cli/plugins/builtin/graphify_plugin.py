@@ -2,12 +2,11 @@
 
 from __future__ import annotations
 
-import json
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
-from lithic_cli.plugins import GraphProvider, PluginResult
 from lithic_cli.graph.graphify_adapter import GraphifyAdapter
+from lithic_cli.plugins import GraphProvider, PluginResult
 
 
 class GraphifyPlugin(GraphProvider):
@@ -77,7 +76,7 @@ class GraphifyPlugin(GraphProvider):
         except Exception as e:
             return PluginResult.error(f"Path finding failed: {e}")
     
-    def get_stats(self, graph_path: Path) -> PluginResult[Dict[str, Any]]:
+    def get_stats(self, graph_path: Path) -> PluginResult[dict[str, Any]]:
         """Get graph statistics."""
         try:
             project_root = graph_path.parent.parent if graph_path.name == "graph.json" else graph_path.parent
@@ -89,7 +88,7 @@ class GraphifyPlugin(GraphProvider):
         except Exception as e:
             return PluginResult.error(f"Stats retrieval failed: {e}")
     
-    def health_check(self) -> PluginResult[Dict[str, Any]]:
+    def health_check(self) -> PluginResult[dict[str, Any]]:
         """Check if Graphify is available."""
         try:
             import shutil

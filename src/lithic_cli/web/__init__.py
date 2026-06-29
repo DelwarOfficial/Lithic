@@ -8,7 +8,7 @@ import logging
 import os
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from lithic_cli.caching import get_cache
 from lithic_cli.config import AgentConfig
@@ -23,8 +23,8 @@ _log = logging.getLogger("lithic_cli.web")
 # Web framework detection and configuration
 try:
     from fastapi import FastAPI, HTTPException, WebSocket
-    from fastapi.staticfiles import StaticFiles
     from fastapi.responses import HTMLResponse
+    from fastapi.staticfiles import StaticFiles
     from pydantic import BaseModel
     _has_fastapi = True
 except ImportError:
@@ -42,7 +42,7 @@ if _has_fastapi:
         graph_exists: bool
         node_count: int
         edge_count: int
-        last_indexed: Optional[datetime]
+        last_indexed: datetime | None
     
     class SystemStatus(BaseModel):
         """System status model."""
@@ -56,7 +56,7 @@ if _has_fastapi:
     class QueryRequest(BaseModel):
         """Query request model."""
         question: str
-        context: Optional[Dict[str, Any]] = None
+        context: dict[str, Any] | None = None
     
     class CompressionRequest(BaseModel):
         """Compression request model."""
@@ -104,7 +104,7 @@ class WebDashboard:
             """Get system status."""
             return await self._get_system_status()
         
-        @self.app.get("/api/projects", response_model=List[ProjectInfo])
+        @self.app.get("/api/projects", response_model=list[ProjectInfo])
         async def list_projects():
             """List available projects."""
             return await self._list_projects()
@@ -288,7 +288,7 @@ class WebDashboard:
                 services_running=0
             )
     
-    async def _list_projects(self) -> List[ProjectInfo]:
+    async def _list_projects(self) -> list[ProjectInfo]:
         """List available projects."""
         # For now, just return current project
         try:
@@ -308,7 +308,7 @@ class WebDashboard:
             _log.error(f"Failed to list projects: {e}")
             return []
     
-    async def _get_project_details(self, project_id: str) -> Dict[str, Any]:
+    async def _get_project_details(self, project_id: str) -> dict[str, Any]:
         """Get detailed project information."""
         try:
             backend = get_default_backend()

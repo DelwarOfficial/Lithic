@@ -2,25 +2,24 @@
 
 from __future__ import annotations
 
-import asyncio
 import logging
 import re
 import time
 from pathlib import Path
 from typing import Any
 
+from lithic_cli.advanced_monitoring import get_apm_collector
+from lithic_cli.caching import get_cache
 from lithic_cli.compression.headroom_adapter import HeadroomAdapter
 from lithic_cli.config import AgentConfig
-from lithic_cli.graph.service import GraphService
 from lithic_cli.graph.backends import get_default_backend
+from lithic_cli.graph.service import GraphService
+from lithic_cli.plugins.manager import get_plugin_manager
 from lithic_cli.policy.response_policy import ResponsePolicy
 from lithic_cli.providers.service import LLMService
-from lithic_cli.plugins.manager import get_plugin_manager
-from lithic_cli.caching import get_cache
 from lithic_cli.tools import git
-from lithic_cli.tracing import trace_operation
 from lithic_cli.tools.fs import resolve_path_within_root
-from lithic_cli.advanced_monitoring import get_apm_collector
+from lithic_cli.tracing import trace_operation
 
 _log = logging.getLogger("lithic_cli.orchestrator")
 

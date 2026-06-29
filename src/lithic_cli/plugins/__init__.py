@@ -4,11 +4,11 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any, Dict, List, Optional, TypeVar, Generic
+from typing import Any, Generic, TypeVar
 
 T = TypeVar('T')
 
-class PluginResult(Generic[T]):
+class PluginResult[T]:
     """Standard result wrapper for plugin operations."""
     
     def __init__(self, success: bool, data: T | None = None, error: str | None = None):
@@ -61,12 +61,12 @@ class GraphProvider(ABC):
         pass
     
     @abstractmethod
-    def get_stats(self, graph_path: Path) -> PluginResult[Dict[str, Any]]:
+    def get_stats(self, graph_path: Path) -> PluginResult[dict[str, Any]]:
         """Get graph statistics."""
         pass
     
     @abstractmethod
-    def health_check(self) -> PluginResult[Dict[str, Any]]:
+    def health_check(self) -> PluginResult[dict[str, Any]]:
         """Check if provider is healthy and available."""
         pass
 
@@ -97,12 +97,12 @@ class CompressionProvider(ABC):
         pass
     
     @abstractmethod
-    def get_compression_stats(self) -> PluginResult[Dict[str, Any]]:
+    def get_compression_stats(self) -> PluginResult[dict[str, Any]]:
         """Get compression statistics."""
         pass
     
     @abstractmethod
-    def health_check(self) -> PluginResult[Dict[str, Any]]:
+    def health_check(self) -> PluginResult[dict[str, Any]]:
         """Check if provider is healthy and available."""
         pass
 
@@ -123,17 +123,17 @@ class ResponseProvider(ABC):
         pass
     
     @abstractmethod
-    def shape_response(self, content: str, mode: str, context: Dict[str, Any] = None) -> PluginResult[str]:
+    def shape_response(self, content: str, mode: str, context: dict[str, Any] = None) -> PluginResult[str]:
         """Shape response content according to mode and context."""
         pass
     
     @abstractmethod
-    def get_available_modes(self) -> List[str]:
+    def get_available_modes(self) -> list[str]:
         """Get list of supported response modes."""
         pass
     
     @abstractmethod
-    def health_check(self) -> PluginResult[Dict[str, Any]]:
+    def health_check(self) -> PluginResult[dict[str, Any]]:
         """Check if provider is healthy and available."""
         pass
 
@@ -149,17 +149,17 @@ class LLMProvider(ABC):
     
     @property
     @abstractmethod
-    def supported_models(self) -> List[str]:
+    def supported_models(self) -> list[str]:
         """List of supported model names."""
         pass
     
     @abstractmethod
-    def complete(self, messages: List[Dict[str, str]], model: str, **kwargs) -> PluginResult[str]:
+    def complete(self, messages: list[dict[str, str]], model: str, **kwargs) -> PluginResult[str]:
         """Generate completion using specified model."""
         pass
     
     @abstractmethod
-    def health_check(self) -> PluginResult[Dict[str, Any]]:
+    def health_check(self) -> PluginResult[dict[str, Any]]:
         """Check if provider is healthy and available."""
         pass
 
@@ -168,7 +168,7 @@ class PluginMetadata:
     """Plugin metadata and configuration."""
     
     def __init__(self, name: str, version: str, provider_type: str, 
-                 entry_point: str, config: Dict[str, Any] = None):
+                 entry_point: str, config: dict[str, Any] = None):
         self.name = name
         self.version = version
         self.provider_type = provider_type
@@ -177,7 +177,7 @@ class PluginMetadata:
         self.enabled = True
         self.priority = 100  # Lower number = higher priority
     
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "name": self.name,
             "version": self.version,
@@ -189,7 +189,7 @@ class PluginMetadata:
         }
     
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> PluginMetadata:
+    def from_dict(cls, data: dict[str, Any]) -> PluginMetadata:
         meta = cls(
             name=data["name"],
             version=data["version"], 

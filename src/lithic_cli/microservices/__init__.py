@@ -10,7 +10,7 @@ from abc import ABC, abstractmethod
 from dataclasses import asdict, dataclass
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 _log = logging.getLogger("lithic_cli.microservices")
 
@@ -37,7 +37,7 @@ class ServiceConfig:
     replicas: int = 1
     max_memory_mb: int = 512
     max_cpu_cores: float = 1.0
-    env_vars: Dict[str, str] = None
+    env_vars: dict[str, str] = None
     
     def __post_init__(self):
         if self.env_vars is None:
@@ -49,12 +49,12 @@ class ServiceInstance:
     """Running service instance."""
     config: ServiceConfig
     instance_id: str
-    pid: Optional[int] = None
+    pid: int | None = None
     status: str = "starting"
-    started_at: Optional[datetime] = None
-    last_health_check: Optional[datetime] = None
+    started_at: datetime | None = None
+    last_health_check: datetime | None = None
     health_status: str = "unknown"
-    metrics: Dict[str, Any] = None
+    metrics: dict[str, Any] = None
     
     def __post_init__(self):
         if self.metrics is None:
@@ -65,8 +65,8 @@ class ServiceRegistry:
     """Service discovery and registration."""
     
     def __init__(self):
-        self._services: Dict[str, ServiceInstance] = {}
-        self._type_index: Dict[ServiceType, List[str]] = {}
+        self._services: dict[str, ServiceInstance] = {}
+        self._type_index: dict[ServiceType, list[str]] = {}
     
     def register(self, instance: ServiceInstance) -> bool:
         """Register service instance."""
@@ -101,20 +101,20 @@ class ServiceRegistry:
         _log.info(f"Unregistered service {service_name}")
         return True
     
-    def find_services(self, service_type: ServiceType) -> List[ServiceInstance]:
+    def find_services(self, service_type: ServiceType) -> list[ServiceInstance]:
         """Find services by type."""
         service_names = self._type_index.get(service_type, [])
         return [self._services[name] for name in service_names if name in self._services]
     
-    def get_service(self, service_name: str) -> Optional[ServiceInstance]:
+    def get_service(self, service_name: str) -> ServiceInstance | None:
         """Get specific service instance."""
         return self._services.get(service_name)
     
-    def list_all(self) -> List[ServiceInstance]:
+    def list_all(self) -> list[ServiceInstance]:
         """List all registered services."""
         return list(self._services.values())
     
-    def health_summary(self) -> Dict[str, Any]:
+    def health_summary(self) -> dict[str, Any]:
         """Get health summary of all services."""
         total = len(self._services)
         healthy = sum(1 for s in self._services.values() if s.health_status == "healthy")
@@ -140,8 +140,8 @@ class ServiceManager:
     
     def __init__(self):
         self.registry = ServiceRegistry()
-        self._running_processes: Dict[str, asyncio.subprocess.Process] = {}
-        self._health_tasks: Dict[str, asyncio.Task] = {}
+        self._running_processes: dict[str, asyncio.subprocess.Process] = {}
+        self._health_tasks: dict[str, asyncio.Task] = {}
     
     async def start_service(self, config: ServiceConfig, instance_id: str = "1") -> bool:
         """Start a service instance."""
@@ -198,7 +198,7 @@ class ServiceManager:
             _log.error(f"Failed to start service {service_name}: {e}")
             return False
     
-    def _build_service_command(self, config: ServiceConfig, instance_id: str) -> List[str]:
+    def _build_service_command(self, config: ServiceConfig, instance_id: str) -> list[str]:
         """Build command to start service."""
         if config.service_type == ServiceType.GRAPH:
             return ["python", "-m", "lithic_cli.microservices.graph_service"]
@@ -232,7 +232,7 @@ class ServiceManager:
             
             try:
                 await asyncio.wait_for(process.wait(), timeout=10)
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 process.kill()
                 await process.wait()
             
@@ -323,7 +323,7 @@ class ServiceManager:
         _log.info(f"Scaled {service_type} from {current_replicas} to {target_replicas} replicas")
         return True
     
-    def get_service_stats(self) -> Dict[str, Any]:
+    def get_service_stats(self) -> dict[str, Any]:
         """Get comprehensive service statistics."""
         return {
             "registry": self.registry.health_summary(),
@@ -339,7 +339,7 @@ class ServiceClient:
         self.registry = registry
     
     async def call_service(self, service_type: ServiceType, method: str, 
-                          data: Dict[str, Any] = None) -> Dict[str, Any]:
+                          data: dict[str, Any] = None) -> dict[str, Any]:
         """Call a service method with load balancing."""
         instances = self.registry.find_services(service_type)
         healthy_instances = [

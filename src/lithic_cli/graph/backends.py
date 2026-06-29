@@ -7,7 +7,7 @@ import logging
 import os
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 _log = logging.getLogger("lithic_cli.graph.backends")
 
@@ -26,52 +26,52 @@ class GraphBackend(ABC):
         pass
     
     @abstractmethod
-    def store_graph(self, graph_data: Dict[str, Any], project_id: str) -> bool:
+    def store_graph(self, graph_data: dict[str, Any], project_id: str) -> bool:
         """Store complete graph data."""
         pass
     
     @abstractmethod
-    def load_graph(self, project_id: str) -> Optional[Dict[str, Any]]:
+    def load_graph(self, project_id: str) -> dict[str, Any] | None:
         """Load complete graph data."""
         pass
     
     @abstractmethod
-    def update_nodes(self, nodes: List[Dict[str, Any]], project_id: str) -> bool:
+    def update_nodes(self, nodes: list[dict[str, Any]], project_id: str) -> bool:
         """Update specific nodes in graph."""
         pass
     
     @abstractmethod
-    def update_edges(self, edges: List[Dict[str, Any]], project_id: str) -> bool:
+    def update_edges(self, edges: list[dict[str, Any]], project_id: str) -> bool:
         """Update specific edges in graph."""
         pass
     
     @abstractmethod
-    def query_nodes(self, filters: Dict[str, Any], project_id: str) -> List[Dict[str, Any]]:
+    def query_nodes(self, filters: dict[str, Any], project_id: str) -> list[dict[str, Any]]:
         """Query nodes by filters."""
         pass
     
     @abstractmethod
-    def query_edges(self, filters: Dict[str, Any], project_id: str) -> List[Dict[str, Any]]:
+    def query_edges(self, filters: dict[str, Any], project_id: str) -> list[dict[str, Any]]:
         """Query edges by filters."""
         pass
     
     @abstractmethod
-    def find_paths(self, source: str, target: str, project_id: str, max_depth: int = 6) -> List[List[str]]:
+    def find_paths(self, source: str, target: str, project_id: str, max_depth: int = 6) -> list[list[str]]:
         """Find paths between nodes."""
         pass
     
     @abstractmethod
-    def get_neighbors(self, node_id: str, project_id: str, direction: str = "both") -> List[str]:
+    def get_neighbors(self, node_id: str, project_id: str, direction: str = "both") -> list[str]:
         """Get neighboring nodes."""
         pass
     
     @abstractmethod
-    def get_stats(self, project_id: str) -> Dict[str, Any]:
+    def get_stats(self, project_id: str) -> dict[str, Any]:
         """Get graph statistics."""
         pass
     
     @abstractmethod
-    def health_check(self) -> Dict[str, Any]:
+    def health_check(self) -> dict[str, Any]:
         """Check backend health."""
         pass
 
@@ -104,7 +104,7 @@ class FileSystemBackend(GraphBackend):
         """Get project storage path."""
         return self.storage_dir / f"{project_id}.json"
     
-    def store_graph(self, graph_data: Dict[str, Any], project_id: str) -> bool:
+    def store_graph(self, graph_data: dict[str, Any], project_id: str) -> bool:
         """Store complete graph data to JSON file."""
         if not self._connected:
             return False
@@ -119,7 +119,7 @@ class FileSystemBackend(GraphBackend):
             _log.error(f"Failed to store graph: {e}")
             return False
     
-    def load_graph(self, project_id: str) -> Optional[Dict[str, Any]]:
+    def load_graph(self, project_id: str) -> dict[str, Any] | None:
         """Load complete graph data from JSON file."""
         if not self._connected:
             return None
@@ -135,7 +135,7 @@ class FileSystemBackend(GraphBackend):
             _log.error(f"Failed to load graph: {e}")
             return None
     
-    def update_nodes(self, nodes: List[Dict[str, Any]], project_id: str) -> bool:
+    def update_nodes(self, nodes: list[dict[str, Any]], project_id: str) -> bool:
         """Update nodes in existing graph."""
         graph_data = self.load_graph(project_id)
         if not graph_data:
@@ -149,7 +149,7 @@ class FileSystemBackend(GraphBackend):
         
         return self.store_graph(graph_data, project_id)
     
-    def update_edges(self, edges: List[Dict[str, Any]], project_id: str) -> bool:
+    def update_edges(self, edges: list[dict[str, Any]], project_id: str) -> bool:
         """Update edges in existing graph."""
         graph_data = self.load_graph(project_id)
         if not graph_data:
@@ -162,7 +162,7 @@ class FileSystemBackend(GraphBackend):
         
         return self.store_graph(graph_data, project_id)
     
-    def query_nodes(self, filters: Dict[str, Any], project_id: str) -> List[Dict[str, Any]]:
+    def query_nodes(self, filters: dict[str, Any], project_id: str) -> list[dict[str, Any]]:
         """Query nodes by simple filters."""
         graph_data = self.load_graph(project_id)
         if not graph_data:
@@ -182,7 +182,7 @@ class FileSystemBackend(GraphBackend):
         
         return results
     
-    def query_edges(self, filters: Dict[str, Any], project_id: str) -> List[Dict[str, Any]]:
+    def query_edges(self, filters: dict[str, Any], project_id: str) -> list[dict[str, Any]]:
         """Query edges by simple filters."""
         graph_data = self.load_graph(project_id)
         if not graph_data:
@@ -202,7 +202,7 @@ class FileSystemBackend(GraphBackend):
         
         return results
     
-    def find_paths(self, source: str, target: str, project_id: str, max_depth: int = 6) -> List[List[str]]:
+    def find_paths(self, source: str, target: str, project_id: str, max_depth: int = 6) -> list[list[str]]:
         """Find paths using simple BFS."""
         graph_data = self.load_graph(project_id)
         if not graph_data:
@@ -239,7 +239,7 @@ class FileSystemBackend(GraphBackend):
         
         return paths
     
-    def get_neighbors(self, node_id: str, project_id: str, direction: str = "both") -> List[str]:
+    def get_neighbors(self, node_id: str, project_id: str, direction: str = "both") -> list[str]:
         """Get neighboring nodes."""
         graph_data = self.load_graph(project_id)
         if not graph_data:
@@ -258,7 +258,7 @@ class FileSystemBackend(GraphBackend):
         
         return list(neighbors)
     
-    def get_stats(self, project_id: str) -> Dict[str, Any]:
+    def get_stats(self, project_id: str) -> dict[str, Any]:
         """Get graph statistics."""
         graph_data = self.load_graph(project_id)
         if not graph_data:
@@ -270,7 +270,7 @@ class FileSystemBackend(GraphBackend):
             "storage_size_mb": self._get_project_path(project_id).stat().st_size / (1024 * 1024)
         }
     
-    def health_check(self) -> Dict[str, Any]:
+    def health_check(self) -> dict[str, Any]:
         """Check file system health."""
         return {
             "healthy": self._connected and self.storage_dir.exists(),
@@ -350,7 +350,7 @@ class PostgreSQLBackend(GraphBackend):
             
         self._connection.commit()
     
-    def store_graph(self, graph_data: Dict[str, Any], project_id: str) -> bool:
+    def store_graph(self, graph_data: dict[str, Any], project_id: str) -> bool:
         """Store complete graph data."""
         if not self._connected:
             return False
@@ -396,7 +396,7 @@ class PostgreSQLBackend(GraphBackend):
             self._connection.rollback()
             return False
     
-    def load_graph(self, project_id: str) -> Optional[Dict[str, Any]]:
+    def load_graph(self, project_id: str) -> dict[str, Any] | None:
         """Load complete graph data."""
         if not self._connected:
             return None
@@ -427,7 +427,7 @@ class PostgreSQLBackend(GraphBackend):
             _log.error(f"Failed to load graph from PostgreSQL: {e}")
             return None
     
-    def find_paths(self, source: str, target: str, project_id: str, max_depth: int = 6) -> List[List[str]]:
+    def find_paths(self, source: str, target: str, project_id: str, max_depth: int = 6) -> list[list[str]]:
         """Find paths using PostgreSQL recursive CTE."""
         if not self._connected:
             return []
@@ -460,7 +460,7 @@ class PostgreSQLBackend(GraphBackend):
             _log.error(f"Failed to find paths in PostgreSQL: {e}")
             return []
     
-    def get_stats(self, project_id: str) -> Dict[str, Any]:
+    def get_stats(self, project_id: str) -> dict[str, Any]:
         """Get graph statistics."""
         if not self._connected:
             return {}
@@ -485,28 +485,28 @@ class PostgreSQLBackend(GraphBackend):
             _log.error(f"Failed to get stats from PostgreSQL: {e}")
             return {}
     
-    def update_nodes(self, nodes: List[Dict[str, Any]], project_id: str) -> bool:
+    def update_nodes(self, nodes: list[dict[str, Any]], project_id: str) -> bool:
         """Update specific nodes."""
         # Implementation similar to store_graph but for updates only
         return False  # Simplified for now
     
-    def update_edges(self, edges: List[Dict[str, Any]], project_id: str) -> bool:
+    def update_edges(self, edges: list[dict[str, Any]], project_id: str) -> bool:
         """Update specific edges."""
         return False  # Simplified for now
     
-    def query_nodes(self, filters: Dict[str, Any], project_id: str) -> List[Dict[str, Any]]:
+    def query_nodes(self, filters: dict[str, Any], project_id: str) -> list[dict[str, Any]]:
         """Query nodes with filters."""
         return []  # Simplified for now
     
-    def query_edges(self, filters: Dict[str, Any], project_id: str) -> List[Dict[str, Any]]:
+    def query_edges(self, filters: dict[str, Any], project_id: str) -> list[dict[str, Any]]:
         """Query edges with filters."""
         return []  # Simplified for now
     
-    def get_neighbors(self, node_id: str, project_id: str, direction: str = "both") -> List[str]:
+    def get_neighbors(self, node_id: str, project_id: str, direction: str = "both") -> list[str]:
         """Get neighboring nodes."""
         return []  # Simplified for now
     
-    def health_check(self) -> Dict[str, Any]:
+    def health_check(self) -> dict[str, Any]:
         """Check PostgreSQL health."""
         if not self._connected:
             return {"healthy": False, "backend": "postgresql", "error": "Not connected"}
